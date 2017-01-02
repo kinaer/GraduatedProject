@@ -9,6 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="216dp"
         android:id="@+id/goCamera"
+        android:onClick="goActivity"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
@@ -17,7 +18,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="14dp"
-        android:id="@+id/button2"
+        android:id="@+id/goBalloon"
+        android:onClick="goActivity"
         android:layout_below="@+id/goCamera"
         android:layout_alignStart="@+id/goCamera" />
 
@@ -27,8 +29,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="14dp"
         android:id="@+id/button3"
-        android:layout_below="@+id/button2"
-        android:layout_alignStart="@+id/button2" />
+        android:layout_below="@+id/goBalloon"
+        android:layout_alignStart="@+id/goBalloon" />
 
     <Button
         android:text="Button"

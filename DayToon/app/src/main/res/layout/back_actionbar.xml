@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:background="?attr/colorButtonNormal"
     android:layout_height="40dp">
-
-
     <Button
         android:layout_marginStart="13dp"
         android:id="@+id/homeBtm"
@@ -16,17 +14,6 @@
         android:layout_alignParentStart="true"
         android:layout_width="30dp"
         android:layout_height="30dp" />
-
-    <Button
-        android:id="@+id/focusingBtn"
-        android:onClick="ChangeFocusBtnClick"
-        android:background="@drawable/camera_change"
-        android:layout_marginEnd="20dp"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_alignTop="@+id/homeBtm"
-        android:layout_alignParentEnd="true" />
-
     <ImageView
         android:layout_width="120dp"
         app:srcCompat="@drawable/daytoonbar"
@@ -34,4 +21,15 @@
         android:layout_height="40dp"
         android:layout_centerVertical="true"
         android:layout_toEndOf="@+id/homeBtm" />
+
+    <Button
+        android:text="Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="11dp"
+        android:visibility="invisible" />
+
+
 </RelativeLayout>

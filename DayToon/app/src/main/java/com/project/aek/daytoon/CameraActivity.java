@@ -137,10 +137,6 @@ private BaseLoaderCallback mLoadeCallback= new BaseLoaderCallback(this){
 
         changeBtm = (ImageView) findViewById(R.id.changeBtm);
         stikerBtm = (Button)findViewById(R.id.stikerBtm);
-        stikerBtm.setOnClickListener(this);
-        changeBtm.setOnClickListener(this);
-
-
     }
 
     @Override
@@ -151,38 +147,42 @@ private BaseLoaderCallback mLoadeCallback= new BaseLoaderCallback(this){
 
     @Override
     public void onClick(View v) {
-        if(v == changeBtm)
+        switch (v.getId())
         {
-            int effect = mCvCameraView.mMangaEffectData.getmMangeEffect();
-            if(effect == mCvCameraView.mMangaEffectData.SKETCH)
-            {
-                v.setBackground(getDrawable(android.R.drawable.presence_online));
-                mCvCameraView.mMangaEffectData.setEffect(mCvCameraView.mMangaEffectData.SKETCH_C);
-            }
-            else if(effect == mCvCameraView.mMangaEffectData.SKETCH_C)
-            {
-                v.setBackground(getDrawable(android.R.drawable.presence_invisible));
-                mCvCameraView.mMangaEffectData.setEffect(mCvCameraView.mMangaEffectData.SKETCH);
-            }
-        }
-        else if(v == stikerBtm)
-        {
-            if(stikerOn)
-            {
-                faceView.setVisibility(View.GONE);
-                stikerOn=false;
-            }
-            else
-            {
-                faceView.setVisibility(View.VISIBLE);
-                stikerOn=true;
-                faceView.setSize(mCvCameraView.getWidth(),mCvCameraView.getHeight());
-                //faceView = new FaceDrawView(this);
-                //mCvCameraView.cameraReStart();
-            }
+            case R.id.changeBtm:            //전면 후면 체인지 버튼
+                int effect = mCvCameraView.mMangaEffectData.getmMangeEffect();
+                if(effect == mCvCameraView.mMangaEffectData.SKETCH)
+                {
+                    v.setBackground(getDrawable(android.R.drawable.presence_online));
+                    mCvCameraView.mMangaEffectData.setEffect(mCvCameraView.mMangaEffectData.SKETCH_C);
+                }
+                else if(effect == mCvCameraView.mMangaEffectData.SKETCH_C)
+                {
+                    v.setBackground(getDrawable(android.R.drawable.presence_invisible));
+                    mCvCameraView.mMangaEffectData.setEffect(mCvCameraView.mMangaEffectData.SKETCH);
+                }
+                break;
+            case R.id.stikerBtm:            //스티커 on off 버튼
+                if(stikerOn)
+                {
+                    faceView.setVisibility(View.GONE);
+                    stikerOn=false;
+                }
+                else
+                {
+                    faceView.setVisibility(View.VISIBLE);
+                    stikerOn=true;
+                    faceView.setSize(mCvCameraView.getWidth(),mCvCameraView.getHeight());
+                    //faceView = new FaceDrawView(this);
+                    //mCvCameraView.cameraReStart();
+                }
+                break;
+            case R.id.homeBtm:
+                finish();
+                break;
         }
 
-    }
+    }//onClick
 
     @Override
     protected void onPause() {

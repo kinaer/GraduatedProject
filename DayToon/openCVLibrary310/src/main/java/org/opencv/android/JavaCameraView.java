@@ -410,12 +410,8 @@ public class JavaCameraView extends CameraBridgeViewBase implements PreviewCallb
     @Override
     public void onFaceDetection(Camera.Face[] faces, Camera camera) {
         if (faces.length == 0) {
-            tt.setText("얼굴이 없어");
-            tt.show();
             Log.d("얼굴", "No faces detected");
         } else if (faces.length > 0) {
-            tt.setText("얼굴이 있어");
-            tt.show();
             Log.d("얼굴", "Faces Detected = " +
                     String.valueOf(faces.length));
         }
