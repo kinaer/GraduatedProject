@@ -14,23 +14,14 @@
         android:layout_centerHorizontal="true" />
 
     <Button
-        android:text="Button"
+        android:text="AddBalloon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="14dp"
+        android:layout_marginTop="15dp"
         android:id="@+id/goBalloon"
         android:onClick="goActivity"
         android:layout_below="@+id/goCamera"
-        android:layout_alignStart="@+id/goCamera" />
-
-    <Button
-        android:text="Button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="14dp"
-        android:id="@+id/button3"
-        android:layout_below="@+id/goBalloon"
-        android:layout_alignStart="@+id/goBalloon" />
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:text="Button"
@@ -40,4 +31,13 @@
         android:id="@+id/button4"
         android:layout_below="@+id/button3"
         android:layout_alignStart="@+id/button3" />
+
+    <Button
+        android:text="Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:id="@+id/button3"
+        android:layout_below="@+id/goBalloon"
+        android:layout_alignStart="@+id/goCamera" />
 </RelativeLayout>
