@@ -2,11 +2,16 @@ package com.project.aek.daytoon;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -27,8 +32,14 @@ import android.widget.ImageView;
 import com.project.aek.daytoon.widget.EditBalloonView;
 import com.project.aek.daytoon.widget.TextBalloon;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by aek on 2016-12-31.
@@ -40,22 +51,14 @@ public class AddBalloonActivity extends AppCompatActivity {
     private EditBalloonView getImageView;
     private ArrayList<TextBalloon> mBalloon = new ArrayList<TextBalloon>();
     private FrameLayout layout;
-
+    TextBalloon t;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_addballoon);
         setActionBar();
         layout = (FrameLayout)findViewById(R.id.BalloonLayout);
-       // Button homeBtm = (Button)findViewById(R.id.homeBtm);
-        /*
-        homeBtm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-        */
+
         Log.d("풍선 인텐트","인텐트 시작");
        // getImageView = (ImageView)findViewById(R.id.getimageView);
         getImageView = (EditBalloonView)findViewById(R.id.getimageView);
@@ -73,10 +76,57 @@ public class AddBalloonActivity extends AppCompatActivity {
                 break;
             case R.id.addBalloonBtm:
                 //mBalloon.add(new TextBalloon(this));
-                TextBalloon t = new TextBalloon(this);
+                t = new TextBalloon(this);
+                mBalloon.add(t);
                 layout.addView(t);
                // layout.addView(t,new WindowManager.LayoutParams(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT));
-                Log.d("풍선버튼","눌림"+t.getWidth()+"  "+t.getHeight());
+                Log.d("풍선버튼","이미지"+getImageView.getWidth()+"  "+getImageView.getHeight());
+                Log.d("풍선버튼","레이아웃"+layout.getWidth()+"  "+layout.getHeight());
+                Log.d("풍선버튼","풍선"+t.getWidth()+"  "+t.getHeight());
+                break;
+            case R.id.saveBtm:
+                ViewGroup.LayoutParams param = layout.getLayoutParams();
+                param.width = getImageView.getWidth();
+                param.height = getImageView.getHeight();
+
+                layout.setLayoutParams(param);
+                layout.setDrawingCacheEnabled(true);
+                Bitmap AddBalloonBm = layout.getDrawingCache();
+
+               // getImageView.setDrawingCacheEnabled(true);
+               // Bitmap AddBalloonBm = getImageView.getDrawingCache();
+              // t.setDrawingCacheEnabled(true);
+               // Bitmap ntext = t.getDrawingCache();
+                AddBalloonBm = BitmapControl.resizeBitmap(AddBalloonBm);
+               // Log.d("풍선버튼","비트맵 사진"+AddBalloonBm.getWidth()+"  "+AddBalloonBm.getHeight());
+               // Log.d("풍선버튼","비트맵 풍선"+ntext.getWidth()+"  "+ntext.getHeight());
+               // AddBalloonBm = BitmapControl.combineBitmap(AddBalloonBm,ntext);
+               // AddBalloonBm = BitmapControl.resizeBitmap(AddBalloonBm);
+
+                String name = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                File mfile=new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),"DayToon");
+                if(!mfile.exists()){
+                    if(!mfile.mkdir()){
+                        Log.d("메인", "사진파일 디렉터리ㅣ 생성실패");
+                    }
+                }
+                String filename=File.separator+"IMG_"+name+".jpg";
+                String path =(mfile.getPath()+filename);
+
+                try{
+                    OutputStream out = new BufferedOutputStream(new FileOutputStream(path));
+                    AddBalloonBm.compress(Bitmap.CompressFormat.JPEG,100,out);
+                    out.flush();
+                    out.close();
+                    MediaScanner scanner = MediaScanner.newInstance(this);
+                    scanner.mediaScanning(path);
+                }
+                catch (IOException e)
+                {
+                    e.getMessage();
+                }
+
+
                 break;
         }
     }
@@ -106,9 +156,25 @@ public class AddBalloonActivity extends AppCompatActivity {
             if(requestCode == getImage)     //호출했던 코드가 와야되
             {
                 Log.d("풍선 인텐트","넘어옴");
+
                 String mPath = (String)data.getExtras().get("bm");
                 Bitmap bm = BitmapFactory.decodeFile(mPath);
-                getImageView.setImageBitmap(bm);
+                Drawable dr = new BitmapDrawable(bm);       //비트맵을 Drawable로 바꾼다.
+
+                getImageView.setBackground(dr);
+               // getImageView.setImageBitmap(bm);
+
+                //비트맵 크기에 따라서 세팅변경
+                if(bm.getWidth() > bm.getHeight())
+                {
+                    //가로가 세로보다 크면
+                    this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+                }
+                else
+                {
+                    this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                }
 
             }
             else{

@@ -186,16 +186,16 @@ public class CameraView extends JavaCameraView implements Camera.PictureCallback
         temp = PictureRotate(temp);
 
         //리사이즈  영상이 너무크면 처리하는데 시간이 오래걸림
-        temp=resizeBitmap(temp);
+        temp = BitmapControl.resizeBitmap(temp);
         if(isStiker)
         {
-            mFaceBitamp = resizeBitmap(mFaceBitamp);
 
-            temp = combineBitmap(temp,mFaceBitamp);
+            mFaceBitamp = BitmapControl.resizeBitmap(mFaceBitamp);
+
+            temp = BitmapControl.combineBitmap(temp, mFaceBitamp);
         }
 
-      //  String filename=File.separator+"IMG_"+name+".jpg";
-      //  String path =(mfile.getPath()+filename);
+
         if (mApplyManga) {
             org.opencv.core.Size newSize = new org.opencv.core.Size(temp.getWidth(), temp.getHeight());
             Mat mtmp = new Mat(newSize, CV_8UC3);
@@ -256,130 +256,36 @@ public class CameraView extends JavaCameraView implements Camera.PictureCallback
     {
         return mCameraIndex;
     }
-public Bitmap bmpSideInversion(Bitmap bitmap)
-{
-    //좌우 반전
-    Matrix m = new Matrix();
-    m.setScale(-1,1);
 
-    try
-    {
-        Bitmap converted = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), m, true);
-        if(bitmap != converted)
-        {
-            bitmap.recycle();
-            bitmap = converted;
-        }
-    }
-    catch(OutOfMemoryError ex)
-    {
-        ex.printStackTrace();
-    }
-
-    return bitmap;
-
-}
-
-    //비트맵 회전
-public Bitmap bmpRotate(Bitmap bitmap, int degrees)
-{
-    if(degrees != 0 && bitmap != null)
-    {
-        Matrix m = new Matrix();
-        //각도만큼 비트맵을 회전한다 크기의 절반씩 건내줘야 회전 잘됨
-
-        m.setRotate(degrees, (float) bitmap.getWidth() / 2, (float) bitmap.getHeight() / 2);
-
-        try
-        {
-            Bitmap converted = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), m, true);
-            if(bitmap != converted)
-            {
-                bitmap.recycle();
-                bitmap = converted;
-            }
-        }
-        catch(OutOfMemoryError ex)
-        {
-            ex.printStackTrace();
-        }
-    }
-    return bitmap;
-}
-    public Bitmap resizeBitmap(Bitmap src)
-    {
-        int mWidth = src.getWidth();
-        int mHeight = src.getHeight();
-        int newWidth = mWidth;
-        int newHeight = mHeight;
-        float rate =0.0f;
-
-        //비율 조절
-        if(mWidth>mHeight)  //가로가 더큰경우
-        {
-            if(640 < mWidth)            //최대 기준치보다 크면
-            {
-                rate = 640/(float)mWidth;
-               // newHeight = (int)(mHeight*rate);
-                newHeight = 480;
-                newWidth = 640;
-            }
-        }
-        else        //세로가 더 큰경우
-        {
-            if(640<mHeight)
-            {
-                rate = 640 /(float)mHeight;
-               // newWidth = (int)(mWidth*rate);
-                newWidth=480;
-                newHeight = 640;
-            }
-        }
-        return Bitmap.createScaledBitmap(src,newWidth,newHeight,true);
-    }
     protected Bitmap PictureRotate(Bitmap bitmap)
     {
         if(degree==0 &&  mCameraIndex == Camera.CameraInfo.CAMERA_FACING_BACK)
-            bitmap = bmpRotate(bitmap,90);
+            bitmap = BitmapControl.bmpRotate(bitmap,90);
         else if(degree==180 && mCameraIndex == Camera.CameraInfo.CAMERA_FACING_BACK)
-            bitmap = bmpRotate(bitmap, 270);
+            bitmap = BitmapControl.bmpRotate(bitmap, 270);
         else if(degree==270 && mCameraIndex == Camera.CameraInfo.CAMERA_FACING_BACK)
-            bitmap = bmpRotate(bitmap, 180);
+            bitmap = BitmapControl.bmpRotate(bitmap, 180);
         else if(degree == 0 &&  mCameraIndex == Camera.CameraInfo.CAMERA_FACING_FRONT)
         {
-            bitmap = bmpRotate(bitmap, 270);
-            bitmap= bmpSideInversion(bitmap);
+            bitmap = BitmapControl.bmpRotate(bitmap, 270);
+            bitmap= BitmapControl.bmpSideInversion(bitmap);
         }
         else if(degree == 90 &&  mCameraIndex == Camera.CameraInfo.CAMERA_FACING_FRONT)
         {
-            bitmap= bmpSideInversion(bitmap);
+            bitmap= BitmapControl.bmpSideInversion(bitmap);
         }
         else if(degree == 180 &&  mCameraIndex == Camera.CameraInfo.CAMERA_FACING_FRONT)
         {
-            bitmap = bmpRotate(bitmap, 90);
-            bitmap= bmpSideInversion(bitmap);
+            bitmap = BitmapControl.bmpRotate(bitmap, 90);
+            bitmap= BitmapControl.bmpSideInversion(bitmap);
         }
         else if(degree == 270 &&  mCameraIndex == Camera.CameraInfo.CAMERA_FACING_FRONT)
         {
-            bitmap = bmpRotate(bitmap, 180);
-            bitmap= bmpSideInversion(bitmap);
+            bitmap = BitmapControl.bmpRotate(bitmap, 180);
+            bitmap= BitmapControl.bmpSideInversion(bitmap);
         }
         return bitmap;
     }
 
-    protected Bitmap combineBitmap(Bitmap pic, Bitmap face)
-    {
-        Bitmap result =null;
-        int witdh, height = 0;
 
-        witdh = pic.getWidth();
-        height = pic.getHeight();
-
-        result = Bitmap.createBitmap(witdh,height, Bitmap.Config.ARGB_8888);
-
-        Canvas combine = new Canvas(result);
-        combine.drawBitmap(pic,0,0,null);
-        combine.drawBitmap(face,0,0,null);
-        return result;
-    }
 }
