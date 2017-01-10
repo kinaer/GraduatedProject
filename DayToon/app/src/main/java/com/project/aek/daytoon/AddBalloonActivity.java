@@ -3,6 +3,7 @@ package com.project.aek.daytoon;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -22,12 +23,14 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.project.aek.daytoon.widget.EditBalloonView;
 import com.project.aek.daytoon.widget.TextBalloon;
@@ -66,6 +69,8 @@ public class AddBalloonActivity extends AppCompatActivity {
         Log.d("풍선 인텐트","인텐트 시작");
         startActivityForResult(intent,getImage);
     }
+
+
 
     public void onClick(View v)
     {
@@ -149,6 +154,16 @@ public class AddBalloonActivity extends AppCompatActivity {
     }//setCameraActionBar
 
     @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            setActionBar();
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+
+        }
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == RESULT_OK)  //액티비티가 정상 종료되야하고
@@ -161,20 +176,22 @@ public class AddBalloonActivity extends AppCompatActivity {
                 Bitmap bm = BitmapFactory.decodeFile(mPath);
                 Drawable dr = new BitmapDrawable(bm);       //비트맵을 Drawable로 바꾼다.
 
-                getImageView.setBackground(dr);
-               // getImageView.setImageBitmap(bm);
-
                 //비트맵 크기에 따라서 세팅변경
                 if(bm.getWidth() > bm.getHeight())
                 {
                     //가로가 세로보다 크면
                     this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                   // setActionBar(R.layout.balloon_actionbar_land);
+
 
                 }
                 else
                 {
                     this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
                 }
+                getImageView.setBackground(dr);
+                // getImageView.setImageBitmap(bm);
+
 
             }
             else{

@@ -30,7 +30,8 @@
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
         <activity android:name=".AddBalloonActivity"
             android:theme="@style/CustomTheme"
-            android:configChanges="orientation|keyboard|screenSize"></activity>
+            android:configChanges="orientation|keyboard|screenSize"
+            ></activity>
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
