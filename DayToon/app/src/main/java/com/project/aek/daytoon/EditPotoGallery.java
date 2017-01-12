@@ -65,8 +65,11 @@ public class EditPotoGallery extends AppCompatActivity {
         mGalleryView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+               // parent.getAdapter().getItem(position);
+
                 //비트맵으로 넘기고 싶었지만 인텐트로 넘기는건 40byte가 한계라고 한다
                 //그래서 경로를 넘겨 비트맵을 직접 생성한다.
+
                 String mFilePath = mPotoPath+File.separator+mFileList[position];
 
                 intent.putExtra("bm",mFilePath);
@@ -189,12 +192,14 @@ public class EditPotoGallery extends AppCompatActivity {
             }
             Bitmap bm = BitmapFactory.decodeFile(mFilePath + File.separator + mFileList[position]);
             imageView.setImageBitmap(bm);
+
             /*
-            if(mBitmap != null && !mBitmap.isRecycled())
+            if(bm != null && !bm.isRecycled())
             {
-                mBitmap.recycle();
+                bm.recycle();
             }
-*/
+            */
+            Log.d("갤러리뷰","포지션"+position);
             return imageView;
         }
     }

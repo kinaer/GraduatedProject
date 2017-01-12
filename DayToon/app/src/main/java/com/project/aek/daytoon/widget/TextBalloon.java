@@ -41,7 +41,7 @@ public class TextBalloon extends TextView {
         this.setWidth(300* BitmapControl.pixel(getContext()));
         this.setHeight(300*BitmapControl.pixel(getContext()));
         this.setBackground(mContext.getDrawable(R.drawable.balloon01));
-        this.setText("가나다 ");
+        this.setText("");
 
     }
 

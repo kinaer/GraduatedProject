@@ -20,7 +20,7 @@
         </activity>
         <activity android:name=".CameraActivity"
             android:theme="@style/CustomTheme"
-            android:configChanges="orientation|keyboard|screenSize"
+
             >
         </activity>
         <activity android:name=".EditPotoGallery"

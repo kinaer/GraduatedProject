@@ -115,7 +115,7 @@ public class CameraView extends JavaCameraView implements Camera.PictureCallback
             }
             else if(degree == 90)       //90 가로
             {
-               // setDisplayOrientation(mCamera, 0);
+                setDisplayOrientation(mCamera, 0);
                 param.setRotation(0);
                 mCamera.setPreviewDisplay(getHolder());
             }
@@ -127,7 +127,7 @@ public class CameraView extends JavaCameraView implements Camera.PictureCallback
             }
             else if(degree == 270)  //270 가로
             {
-               // setDisplayOrientation(mCamera, 180);
+                setDisplayOrientation(mCamera, 180);
                 param.setRotation(180);
                 mCamera.setPreviewDisplay(getHolder());
             }
@@ -151,21 +151,21 @@ public class CameraView extends JavaCameraView implements Camera.PictureCallback
 
     }
 
-    public void takePicture(final String fileName, Bitmap faceBitmap,boolean stk){
+    public void takePicture(final String fileName, Bitmap faceBitmap){
         Log.d("카메라뷰","take Picture");
         this.mPictureFileName = fileName;
         mFaceBitamp = faceBitmap;
-        isStiker=stk;
+
         //버퍼 클리어 프리뷰 이미지나 비디오를 초기화 하는 매소드
         mCamera.setPreviewCallback(null);
         //사진을 찍는다. 여기서 onPictureTaken을 불러온다
         mCamera.takePicture(this,null,this);
 
     }
-    public void takePicture(final String fileName,boolean stk){
+    public void takePicture(final String fileName){
         Log.d("카메라뷰","take Picture");
         this.mPictureFileName = fileName;
-        isStiker=stk;
+
         //버퍼 클리어 프리뷰 이미지나 비디오를 초기화 하는 매소드
         mCamera.setPreviewCallback(null);
         //사진을 찍는다. 여기서 onPictureTaken을 불러온다
@@ -187,13 +187,12 @@ public class CameraView extends JavaCameraView implements Camera.PictureCallback
 
         //리사이즈  영상이 너무크면 처리하는데 시간이 오래걸림
         temp = BitmapControl.resizeBitmap(temp);
-        if(isStiker)
-        {
+
 
             mFaceBitamp = BitmapControl.resizeBitmap(mFaceBitamp);
 
             temp = BitmapControl.combineBitmap(temp, mFaceBitamp);
-        }
+
 
 
         if (mApplyManga) {

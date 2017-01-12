@@ -1,5 +1,8 @@
 package com.project.aek.daytoon;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -34,6 +37,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,14 +64,9 @@ import java.util.ListIterator;
 import static org.opencv.core.CvType.CV_8UC3;
 
 public class CameraActivity extends AppCompatActivity implements CvCameraViewListener2,View.OnTouchListener,
-        SensorEventListener,View.OnClickListener{
+        SensorEventListener,View.OnClickListener, StikerFragment.OnGetItemIdListener{
 //, Camera.FaceDetectionListener
     private CameraView mCvCameraView;
-    private List<Camera.Size> mResolutionList;
-    private MenuItem[] mEffectMenuItems;
-    private SubMenu mColorEffectsMenu;
-    private MenuItem[] mResolutionMenuItems;
-    private SubMenu mResolutionMenu;
     private Mat mPictureFrame;
     private Mat mDisplayFrame;
 
@@ -76,13 +75,20 @@ public class CameraActivity extends AppCompatActivity implements CvCameraViewLis
     private ImageView facingBtm;
     private Button stikerBtm;
 
-    private boolean stikerOn=false;
     Toast tt;
     FaceDrawView faceView;
     SensorManager sensorManager;            //방향을 감지할 센서매니저
     Sensor sensor;                          //방향을 감지할 센서
-
+    int effect;                             //흑백 컬러 구분
+    int chageBtnImg;                        //버튼의 이미지
+    int mStikerId;
    // public static boolean FACESTATE = false;
+    //상태 저장에 쓸 이름들
+    private final static String CameraFacing = "CameraFacing";
+    private final static String MangaEffect = "MangaEffect";
+    private final static String ChangeBtnImg = "ChangeBtnImg";
+    private final static String StikerId = "StikerId";
+    private final static String StikerOn = "StikerOn";
 
 
 
@@ -137,6 +143,36 @@ private BaseLoaderCallback mLoadeCallback= new BaseLoaderCallback(this){
 
         changeBtm = (ImageView) findViewById(R.id.changeBtm);
         stikerBtm = (Button)findViewById(R.id.stikerBtm);
+        chageBtnImg = android.R.drawable.presence_online;       //기본이미지
+
+        if(savedInstanceState != null)      //저장된 상태가 있으면
+        {
+            mCameraFacing = savedInstanceState.getInt(CameraFacing);
+            effect = savedInstanceState.getInt(MangaEffect);
+            chageBtnImg = savedInstanceState.getInt(ChangeBtnImg);
+            mStikerId = savedInstanceState.getInt(StikerId);
+            //전부 불러온후 적용할거 적용
+            //카메라 포커스는 OnResume에서 호출될거니 다른것들만 적용
+            mCvCameraView.mMangaEffectData.setEffect(effect);   //이펙트 적용
+            changeBtm.setBackground(getDrawable(chageBtnImg));  //이미지 적용
+            faceView.setBitmapId(mStikerId);                    //스티커 적용
+            faceView.setStikerOn(savedInstanceState.getBoolean(StikerOn));
+        }
+    }
+
+    /*/////////////////////////////////////////////////
+        onSaveInstanceState 는 액티비티가 제거되기전의 상태
+        를 저장한다.
+        Bundle객체에 이름-값의 형식으로 동적상태 기록가능
+   ////////////////////////////////////////////////////  */
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(CameraFacing,mCameraFacing);        //카메라 전후면 설정
+        outState.putInt(MangaEffect,effect);                //흑백인지 컬러인지 설정
+        outState.putInt(ChangeBtnImg,chageBtnImg);          //흑백 컬러 체인지 버튼 이미지 설정
+        outState.putInt(StikerId,mStikerId);                //스티커 아이디
+        outState.putBoolean(StikerOn,faceView.getStikerOn());             //스티커 on off
     }
 
     @Override
@@ -150,32 +186,37 @@ private BaseLoaderCallback mLoadeCallback= new BaseLoaderCallback(this){
         switch (v.getId())
         {
             case R.id.changeBtm:            //전면 후면 체인지 버튼
-                int effect = mCvCameraView.mMangaEffectData.getmMangeEffect();
+                effect = mCvCameraView.mMangaEffectData.getmMangeEffect();
                 if(effect == mCvCameraView.mMangaEffectData.SKETCH)
                 {
-                    v.setBackground(getDrawable(android.R.drawable.presence_online));
+                    chageBtnImg = android.R.drawable.presence_online;
+                    changeBtm.setBackground(getDrawable(chageBtnImg));
                     mCvCameraView.mMangaEffectData.setEffect(mCvCameraView.mMangaEffectData.SKETCH_C);
+                    effect = mCvCameraView.mMangaEffectData.SKETCH_C;
                 }
                 else if(effect == mCvCameraView.mMangaEffectData.SKETCH_C)
                 {
-                    v.setBackground(getDrawable(android.R.drawable.presence_invisible));
+                    chageBtnImg = android.R.drawable.presence_invisible;
+                    changeBtm.setBackground(getDrawable(android.R.drawable.presence_invisible));
                     mCvCameraView.mMangaEffectData.setEffect(mCvCameraView.mMangaEffectData.SKETCH);
+                    effect = mCvCameraView.mMangaEffectData.SKETCH;
                 }
                 break;
             case R.id.stikerBtm:            //스티커 on off 버튼
-                if(stikerOn)
+                faceView.setVisibility(View.VISIBLE);
+
+                faceView.setSize(mCvCameraView.getWidth(),mCvCameraView.getHeight());
+                LinearLayout container = (LinearLayout)findViewById(R.id.stikerContainer);
+                if(container.getChildCount() <=0)
                 {
-                    faceView.setVisibility(View.GONE);
-                    stikerOn=false;
+                    StikerFragment fr = new StikerFragment();
+                    FragmentManager fm = getFragmentManager();  //프래그먼트 추가 제거를 위해 매니저 필요
+                    FragmentTransaction fragmentTransaction = fm.beginTransaction();
+                    fragmentTransaction.add(R.id.stikerContainer,fr);
+                    fragmentTransaction.addToBackStack(null);   //Back을 눌렀을때 이전 상태로 되돌아간다.
+                    fragmentTransaction.commit();
                 }
-                else
-                {
-                    faceView.setVisibility(View.VISIBLE);
-                    stikerOn=true;
-                    faceView.setSize(mCvCameraView.getWidth(),mCvCameraView.getHeight());
-                    //faceView = new FaceDrawView(this);
-                    //mCvCameraView.cameraReStart();
-                }
+
                 break;
             case R.id.homeBtm:
                 finish();
@@ -183,6 +224,14 @@ private BaseLoaderCallback mLoadeCallback= new BaseLoaderCallback(this){
         }
 
     }//onClick
+    /*//////////////////////////////////////////////////
+        onGetItemId로 클릭된 스티커의 아이디를 최신화 한다.
+     //////////////////////////////////////////////////*/
+    @Override
+    public void onGetItemId(int id) {
+        mStikerId = id;
+        faceView.setBitmapId(id);
+    }
 
     @Override
     protected void onPause() {
@@ -229,7 +278,7 @@ private BaseLoaderCallback mLoadeCallback= new BaseLoaderCallback(this){
         mDisplayFrame = new Mat(height,width, CV_8UC3);
         mCvCameraView.setFrameSize(width,height);
       //  faceView.setSize(height,width);
-        if(stikerOn)
+
          faceView.setSize(mCvCameraView.getWidth(),mCvCameraView.getHeight());
 
     }
@@ -286,7 +335,7 @@ private BaseLoaderCallback mLoadeCallback= new BaseLoaderCallback(this){
     public void ChangeFocusBtnClick(View v){
         if(mCameraFacing==Camera.CameraInfo.CAMERA_FACING_BACK){
             mCameraFacing=Camera.CameraInfo.CAMERA_FACING_FRONT;
-            if(stikerOn)
+
             faceView.setIsFront(true);
             Toast.makeText(this,"전면으로 전환",Toast.LENGTH_SHORT).show();
             //this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -294,7 +343,7 @@ private BaseLoaderCallback mLoadeCallback= new BaseLoaderCallback(this){
         else{
             mCameraFacing=Camera.CameraInfo.CAMERA_FACING_BACK;
             Toast.makeText(this,"후면으로 전환",Toast.LENGTH_SHORT).show();
-            if(stikerOn)
+
             faceView.setIsFront(false);
         }
         mCvCameraView.disableView();
@@ -316,23 +365,15 @@ private BaseLoaderCallback mLoadeCallback= new BaseLoaderCallback(this){
 
 
 
-        if(stikerOn) {
+
             faceView.setDrawingCacheEnabled(true);
             Bitmap faceBitmap = faceView.getDrawingCache();
-            mCvCameraView.takePicture(path, faceBitmap, stikerOn);
-        }
-        else
-            mCvCameraView.takePicture(path,stikerOn);
+            mCvCameraView.takePicture(path, faceBitmap);
+
 
         Toast.makeText(this, path + " saved", Toast.LENGTH_SHORT).show();
 
         return false;
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-
     }
 
     @Override
@@ -342,11 +383,10 @@ private BaseLoaderCallback mLoadeCallback= new BaseLoaderCallback(this){
     //센서의 각도로부터 화면 전환
     @Override
     public void onSensorChanged(SensorEvent event) {
-        if (stikerOn)
-        {
+
             faceView.setFaces(mCvCameraView.getFaces());
             faceView.invalidate();
-        }
+
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
         int rotation = this.getWindowManager().getDefaultDisplay().getRotation();
@@ -356,30 +396,29 @@ private BaseLoaderCallback mLoadeCallback= new BaseLoaderCallback(this){
                 case Surface.ROTATION_0:
                     degrees = 0;
                     mCvCameraView.setOrientation(false, degrees);
-                    if(stikerOn)
+
                      faceView.setIsLand(false);
                     break;
                 case Surface.ROTATION_90:
                     degrees = 90;
                      mCvCameraView.setOrientation(true,degrees);
-                    if(stikerOn)
+
                     faceView.setIsLand(true);
                     break;
                 case Surface.ROTATION_180:
                     degrees = 180;
                      mCvCameraView.setOrientation(false,degrees);
-                    if(stikerOn)
+
                     faceView.setIsLand(false);
                     break;
                 case Surface.ROTATION_270:
                     degrees = 270;
                      mCvCameraView.setOrientation(true,degrees);
-                    if(stikerOn)
+
                     faceView.setIsLand(true);
                     break;
             }
-            tt.setText(degrees + " ");
-            tt.show();
+
         }
 
 

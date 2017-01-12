@@ -35,6 +35,9 @@ public class FaceDrawView extends View {
     private int x1;
     private int y1;
 
+    private int currentId;
+    private boolean stikerOn = false;
+
     Paint paint =new Paint();
     private boolean isLand =false;
     private boolean isFont=false;
@@ -77,9 +80,30 @@ public class FaceDrawView extends View {
     {
         this.faces=faces;
     }
+    public void setStikerOn(boolean on)
+    {
+        stikerOn = on;
+    }
+    public boolean getStikerOn()
+    {
+        return stikerOn;
+    }
     public void setBitmapId(int imgId)
     {
+
+        if(currentId == imgId)
+        {
+            stikerOn = false;
+            currentId = 0;
+        }
+        else
+        {
+            stikerOn = true;
+            currentId = imgId;
+        }
+        Log.d("스티커 아이디"," "+currentId);
         iStiker = BitmapFactory.decodeResource(mContext.getResources(),imgId);
+
     }
     public void reSizeBitmap(RectF rect)
     {
@@ -87,8 +111,8 @@ public class FaceDrawView extends View {
         if(isLand)
         {
 
-            iWidth = (int)(rect.width() *1.6f);
-            iHeight = (int)(rect.height() * 1.6f);
+            iWidth = (int)(rect.width() *1.5f);
+            iHeight = (int)(rect.height() * 2f);
             iStiker = Bitmap.createScaledBitmap(iStiker,iWidth,iHeight,true);
             x1 = (int)(rect.centerX()-iWidth/2);        //왼쪽위 좌표들
             y1 = (int)(rect.centerY()-iHeight/(1.8));
@@ -109,7 +133,8 @@ public class FaceDrawView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
 
-
+        if(!stikerOn)
+            return;
 
         Matrix matrix = new Matrix();
         matrix.setScale(isFont ? -1 : 1,1);     //앞이면 좌우 반전시켜주고 아니면 그냥
