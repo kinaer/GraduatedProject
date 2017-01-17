@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -28,14 +29,20 @@ public class MainMenuActivity extends AppCompatActivity {
      ///////////////////////////////////////*/
     public void goActivity(View v)
     {
-
+        Log.d("_test","goActivity()");
         switch(v.getId())
         {
             case R.id.goCamera:
+                Log.d("_test","goCamera");
                 startActivity(new Intent(MainMenuActivity.this,CameraActivity.class));
                 break;
             case R.id.goBalloon:
+                Log.d("_test","goBalloon");
                 startActivity(new Intent(MainMenuActivity.this,AddBalloonActivity.class));
+                break;
+            case R.id.capture:
+                Log.d("_test","capture");
+                startActivity(new Intent(MainMenuActivity.this,SignUpPhotoActivity2.class));
                 break;
 
         }
