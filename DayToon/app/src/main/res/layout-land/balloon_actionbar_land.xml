@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    android:layout_width="match_parent"
+    android:background="?attr/colorButtonNormal"
+    android:layout_height="40dp"
+    android:weightSum="5">
+
+    <Button
+        android:text="Save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/saveBtm"
+        android:onClick="onClick"
+        android:autoText="true"
+        android:textAllCaps="false"
+        android:layout_weight="0.20"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="15dp" />
+
+    <Button
+        android:text="Balloon"
+        android:id = "@+id/addBalloonBtm"
+        android:onClick="onClick"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_marginEnd="34dp"
+        android:layout_weight="0.22"
+        android:autoText="true"
+        android:textAllCaps="false"
+        android:layout_alignParentTop="true"
+        android:layout_toStartOf="@+id/saveBtm" />
+
+    <ImageView
+        android:layout_width="120dp"
+        app:srcCompat="@drawable/daytoonbar"
+        android:layout_height="40dp"
+        android:layout_weight="2"
+        android:layout_marginEnd="86dp"
+        android:layout_alignParentTop="true"
+        android:layout_toStartOf="@+id/addBalloonBtm" />
+
+    <Button
+        android:layout_marginStart="12dp"
+        android:id="@+id/homeBtm"
+        android:onClick="onClick"
+        android:background="@drawable/back_home"
+        android:layout_weight="1"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignBaseline="@+id/addBalloonBtm"
+        android:layout_alignBottom="@+id/addBalloonBtm"
+        android:layout_alignParentStart="true"
+        android:paddingBottom="10dp" />
+
+
+</RelativeLayout>

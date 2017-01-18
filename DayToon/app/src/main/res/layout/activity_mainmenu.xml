@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <Button
+        android:text="Camera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="213dp"
+        android:id="@+id/goCamera"
+        android:onClick="goActivity"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textAllCaps="false" />
+
+    <Button
+        android:text="AddBalloon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:id="@+id/goBalloon"
+        android:onClick="goActivity"
+        android:layout_below="@+id/goCamera"
+        android:layout_centerHorizontal="true"
+        android:textAllCaps="false" />
+
+
+
+    <Button
+        android:text="Layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:id="@+id/capture"
+        android:layout_below="@+id/goBalloon"
+
+        android:layout_alignStart="@+id/button3"
+        android:onClick="goActivity"
+        android:textAllCaps="false" />
+    <Button
+        android:text="Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="17dp"
+        android:id="@+id/button3"
+        android:layout_below="@+id/capture"
+        android:layout_alignStart="@+id/goCamera"
+        android:textAllCaps="false"
+        />
+
+
+</RelativeLayout>

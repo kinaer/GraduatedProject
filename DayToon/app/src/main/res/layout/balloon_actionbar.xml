@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:background="?attr/colorButtonNormal"
+    android:layout_height="40dp"
+    android:weightSum="5">
+    <Button
+        android:layout_marginStart="13dp"
+        android:id="@+id/homeBtm"
+        android:onClick="onClick"
+        android:background="@drawable/back_home"
+        android:layout_weight="1"
+        android:layout_width="30dp"
+        android:layout_height="30dp" />
+
+    <ImageView
+        android:layout_width="120dp"
+        app:srcCompat="@drawable/daytoonbar"
+        android:layout_marginStart="64dp"
+        android:layout_height="40dp"
+        android:layout_weight="2"
+        />
+
+    <Button
+        android:text="Balloon"
+        android:id = "@+id/addBalloonBtm"
+        android:onClick="onClick"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_weight="0.22"
+        android:autoText="true"
+        android:textAllCaps="false" />
+
+    <Button
+        android:text="Save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/saveBtm"
+        android:onClick="onClick"
+        android:layout_weight="1.08"
+        android:autoText="true"
+        android:textAllCaps="false" />
+
+
+</LinearLayout>

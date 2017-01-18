@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.project.aek.daytoon.CameraActivity">
+
+    <view
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        class="com.project.aek.daytoon.CameraView"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/view" />
+
+
+    <Button
+        android:text="Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/stikerBtm"
+        android:onClick="onClick"
+        android:alpha="0.4" />
+
+    <ImageView
+        android:id="@+id/changeBtm"
+        android:alpha="0.4"
+        android:background="@android:drawable/presence_invisible"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:onClick="onClick"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_height="80dp"
+        android:id = "@+id/stikerContainer"></LinearLayout>
+
+
+</RelativeLayout>
