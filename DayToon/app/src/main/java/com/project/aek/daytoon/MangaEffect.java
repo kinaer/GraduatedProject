@@ -1,10 +1,13 @@
 package com.project.aek.daytoon;
 
+import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.renderscript.ScriptIntrinsicLUT;
 import android.util.Log;
 import android.widget.ImageView;
 
+import org.opencv.core.Core;
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
@@ -20,15 +23,16 @@ import static org.opencv.core.CvType.CV_8UC3;
  * Created by aek on 2016-11-13.
  */
 
-public class MangaEffect {
+public class MangaEffect{
     public static final int
             SKETCH = 0,
-            SKETCH_C=1;
+            SKETCH_C=1,
+            PAINT=2;
 
     private String[] mMangaEffects={
             "Sketch",
-            "Sketch-Color"
-
+            "Sketch-Color",
+            "Paint"
     };
 
     private int effectType;
@@ -48,6 +52,9 @@ public class MangaEffect {
                 break;
             case "Sketch-Color":
                 effectType=SKETCH_C;
+                break;
+            case "Paint":
+                effectType=PAINT;
                 break;
 
         }
@@ -109,9 +116,50 @@ public class MangaEffect {
 
             Imgproc.drawContours(dst,mList,-1,new Scalar(0,0,0),2);
         }
-        if(effectType == SKETCH_C)
+        else if(effectType == SKETCH_C)
         {
+            Imgproc.cvtColor(src,src,Imgproc.COLOR_BGRA2BGR);
+            int num_down = 2;           //다운 샘플링횟수
+            int num_bilateral = 5;      //바이레터럴실행 횟수
+            Mat tempSrc =new Mat(src.size(),CV_8UC3);
+            src.copyTo(tempSrc);
 
+            for(int i = 0; i<num_down; i++)
+            {
+                Imgproc.pyrDown(tempSrc,tempSrc);           //다운 샘플링
+            }
+
+            Mat tmp = new Mat(tempSrc.size(),CV_8UC3);   //임시로 저장할 Mat
+            int d = 9;
+            double sigmaColor =9;
+            double sigmaSpace = 7;
+            //작은 바이레터럴 적용
+            for(int i = 0; i <  num_bilateral; i++)
+            {
+                Imgproc.bilateralFilter(tempSrc,tmp, d, sigmaColor, sigmaSpace);
+                Imgproc.bilateralFilter(tmp,tempSrc, d, sigmaColor, sigmaSpace);
+
+            }
+
+            for(int i = 0; i<num_down; i++)
+            {
+                Imgproc.pyrUp(tempSrc,tempSrc);
+            }
+
+            Mat img_gray = new Mat(src.size(),CV_8UC1);
+            Mat img_blur = new Mat(src.size(),CV_8UC1);
+            Mat img_edge = new Mat(src.size(),CV_8UC1);
+
+            Imgproc.cvtColor(src,img_gray,Imgproc.COLOR_BGR2GRAY);      //그레이스케일로 변환
+            Imgproc.medianBlur(img_gray,img_blur,9);                //미디안블로 적용
+            //세번째 인자 최대값,네번째 인자는 적용 알고리즘, 다섯번째는 임계값 유형, 여섯번째는 블록크기,
+            //이러고 이진화한걸 에지로 쓴다.
+            Imgproc.adaptiveThreshold(img_blur,img_edge,255,Imgproc.ADAPTIVE_THRESH_MEAN_C, Imgproc.THRESH_BINARY,9,2);
+
+            Imgproc.cvtColor(img_edge,img_edge,Imgproc.COLOR_GRAY2BGR);
+            Core.bitwise_and(tempSrc,img_edge,dst);
+
+            /*
             //바이레터럴 필터가 매우 느리므로 이미지를 축소 시켜 작업하고 복원한다.
             Imgproc.cvtColor(src,src,Imgproc.COLOR_BGRA2BGR);
             Size size = src.size();
@@ -146,6 +194,37 @@ public class MangaEffect {
             //mBlock.copyTo(gray,lMat4);
             img.copyTo(dst,gray);
             Imgproc.drawContours(dst,mList,-1,new Scalar(0,0,0),2);
+            */
+        }
+        else if(effectType == PAINT)
+        {
+
+            Imgproc.cvtColor(src,src,Imgproc.COLOR_BGRA2BGR);
+            Imgproc.cvtColor(dst,dst,Imgproc.COLOR_BGRA2BGR);
+            OilPaintFilter(src,dst,20,9);
+
+            /*
+            Imgproc.cvtColor(src,src,Imgproc.COLOR_BGRA2BGR);
+            Imgproc.cvtColor(dst,dst,Imgproc.COLOR_BGRA2BGR);
+
+            Mat tempSrc =new Mat(src.size(),CV_8UC3);
+            src.copyTo(tempSrc);
+
+            OilPaintFilter(src,tempSrc,20,9);
+
+            Mat img_gray = new Mat(src.size(),CV_8UC1);
+            Mat img_blur = new Mat(src.size(),CV_8UC1);
+            Mat img_edge = new Mat(src.size(),CV_8UC1);
+
+            Imgproc.cvtColor(src,img_gray,Imgproc.COLOR_BGR2GRAY);      //그레이스케일로 변환
+            Imgproc.medianBlur(img_gray,img_blur,9);                //미디안블로 적용
+            //세번째 인자 최대값,네번째 인자는 적용 알고리즘, 다섯번째는 임계값 유형, 여섯번째는 블록크기,
+            //이러고 이진화한걸 에지로 쓴다.
+            Imgproc.adaptiveThreshold(img_blur,img_edge,255,Imgproc.ADAPTIVE_THRESH_MEAN_C, Imgproc.THRESH_BINARY,9,2);
+
+            Imgproc.cvtColor(img_edge,img_edge,Imgproc.COLOR_GRAY2BGR);
+            Core.bitwise_and(tempSrc,img_edge,dst);
+*/
 
         }
 
@@ -229,6 +308,96 @@ public class MangaEffect {
     public void setCaptureManga(int width, int height, byte[] data, int[] frame){
         setCaptureFrame(width,height,data,frame,mSketchMode);
     }
+
+    public void OilPaintFilter(Mat src, Mat dst, int levels, int filterSize)
+    {
+        int[] intensityBin = new int[levels];
+        int[] blueBin = new int[levels];
+        int[] greenBin = new int[levels];
+        int[] redBin = new int[levels];
+
+        levels -=1;
+
+        int filterOffset = (filterSize - 1) / 2;
+        int byteOffset = 0;
+        int calcOffset = 0;
+        int currentIntensity = 0;
+        int maxIntensity = 0;
+        int maxindex = 0;
+
+        double blue = 0;
+        double green = 0;
+        double red = 0;
+
+        Size srcSize = src.size();
+        float divide3 = 1/3.0f;
+        float divide255 = 1/255.0f;
+        double[] data = null;
+        double[] tempData = null;
+
+        src.convertTo(src, CvType.CV_64FC3);
+        dst.convertTo(dst, CvType.CV_64FC3);
+        int size = (int)(src.total() * src.channels());
+        double[] srcData = new double[size];
+        double[] dstData = new double[size];
+        src.get(0,0,srcData);             //이게 src의 1차원 배열
+        int srcCols = src.cols() * 3;
+
+        for(int offsetY = filterOffset; offsetY < srcSize.height - filterOffset; offsetY++)
+        {
+            for(int offsetX =  filterOffset; offsetX < srcSize.width - filterOffset; offsetX++)
+            {
+                blue = green = red = 0;     //BGR 0으로 초기화
+
+                currentIntensity = maxIntensity = maxindex = 0;     //intensity index 초기화
+
+                intensityBin = new int[levels + 1];
+                blueBin = new int[levels + 1];
+                greenBin = new int [levels + 1];
+                redBin = new int[levels + 1];
+
+                byteOffset = offsetY * srcCols + offsetX *3;
+
+                for(int filterY = -filterOffset; filterY <= filterOffset; filterY++)
+                {
+                    for(int filterX = -filterOffset; filterX <= filterOffset; filterX++)
+                    {
+
+                        calcOffset = byteOffset + (filterX *3) + (filterY * srcCols);
+
+                        currentIntensity = (int)Math.round(((float)
+                                (srcData[calcOffset] + srcData[calcOffset + 1] + srcData[calcOffset + 2])
+                        *divide3 * (levels)) * divide255);
+
+
+                        intensityBin[currentIntensity] += 1;
+                        blueBin[currentIntensity] += srcData[calcOffset];
+                        greenBin[currentIntensity] += srcData[calcOffset + 1];
+                        redBin[currentIntensity] += srcData[calcOffset + 2];
+
+                        if(intensityBin[currentIntensity] > maxIntensity)
+                        {
+                            maxIntensity = intensityBin[currentIntensity];
+                            maxindex = currentIntensity;
+                        }
+                    }//filterX
+                }//filterY
+
+                blue = (blueBin[maxindex] / maxIntensity);
+                green = (greenBin[maxindex] / maxIntensity);
+                red = (redBin[maxindex] / maxIntensity);
+
+                dstData[byteOffset] = blue;
+                dstData[byteOffset + 1] = green;
+                dstData[byteOffset + 2] = red;
+
+            }//offsetX
+        }//offsetY
+        dst.put(0,0,dstData);
+        src.convertTo(src,CvType.CV_8UC3);
+        dst.convertTo(dst,CvType.CV_8UC3);
+
+    }//OilPaintFilter
 //NDK설정
     static{
     System.loadLibrary("cartoonfier");

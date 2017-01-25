@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.hardware.Camera;
 
 import android.hardware.Sensor;
@@ -27,6 +29,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.OrientationEventListener;
 import android.view.SubMenu;
 import android.view.Surface;
 import android.view.SurfaceView;
@@ -38,6 +41,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,13 +50,18 @@ import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewFrame;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
+import org.opencv.android.Utils;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
+import org.opencv.objdetect.CascadeClassifier;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -63,9 +72,9 @@ import java.util.ListIterator;
 
 import static org.opencv.core.CvType.CV_8UC3;
 
-public class CameraActivity extends AppCompatActivity implements CvCameraViewListener2,View.OnTouchListener,
+public class CameraActivity extends AppCompatActivity implements CvCameraViewListener2,
         SensorEventListener,View.OnClickListener, StikerFragment.OnGetItemIdListener{
-//, Camera.FaceDetectionListener
+//, Camera.FaceDetectionListener   View.OnTouchListener,
     private CameraView mCvCameraView;
     private Mat mPictureFrame;
     private Mat mDisplayFrame;
@@ -79,6 +88,14 @@ public class CameraActivity extends AppCompatActivity implements CvCameraViewLis
     FaceDrawView faceView;
     SensorManager sensorManager;            //방향을 감지할 센서매니저
     Sensor sensor;                          //방향을 감지할 센서
+    Sensor accelerometer;
+    Sensor magnetometer;
+
+
+    private float[] mGravity =null;
+    private float[] mGeoMagnetic=null;
+
+
     int effect;                             //흑백 컬러 구분
     int chageBtnImg;                        //버튼의 이미지
     int mStikerId;
@@ -89,7 +106,9 @@ public class CameraActivity extends AppCompatActivity implements CvCameraViewLis
     private final static String ChangeBtnImg = "ChangeBtnImg";
     private final static String StikerId = "StikerId";
     private final static String StikerOn = "StikerOn";
+    private final static String Front = "Front";
 
+    Bitmap rgbBmp;
 
 
     int mCameraFacing = Camera.CameraInfo.CAMERA_FACING_BACK;      //카메라 전후면 전환
@@ -108,7 +127,8 @@ private BaseLoaderCallback mLoadeCallback= new BaseLoaderCallback(this){
                 mCvCameraView.enableView(); //이런 식으로
                // mCvCameraView.setOrientation();
                // mCvCameraView.setParam();
-                mCvCameraView.setOnTouchListener(CameraActivity.this);
+                //mCvCameraView.setOnTouchListener(CameraActivity.this);
+                mCvCameraView.loadCascade();
             }break;
             default: {
                 super.onManagerConnected(status);
@@ -122,6 +142,8 @@ private BaseLoaderCallback mLoadeCallback= new BaseLoaderCallback(this){
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
       //  getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        //this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_main);
         mCvCameraView = (CameraView) findViewById(R.id.view);
         mCvCameraView.setVisibility(SurfaceView.VISIBLE);
@@ -133,6 +155,9 @@ private BaseLoaderCallback mLoadeCallback= new BaseLoaderCallback(this){
         mCvCameraView.mMangaEffectData=new MangaEffect();
         sensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);    //시스템으로부터 센서 서비스를 받아와
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);   //방향센서를 받아와
+        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+
         tt= Toast.makeText(this," ",Toast.LENGTH_SHORT);
 
         setCameraActionBar();
@@ -157,7 +182,9 @@ private BaseLoaderCallback mLoadeCallback= new BaseLoaderCallback(this){
             changeBtm.setBackground(getDrawable(chageBtnImg));  //이미지 적용
             faceView.setBitmapId(mStikerId);                    //스티커 적용
             faceView.setStikerOn(savedInstanceState.getBoolean(StikerOn));
+            faceView.setIsFront(savedInstanceState.getBoolean(Front));
         }
+
     }
 
     /*/////////////////////////////////////////////////
@@ -173,6 +200,7 @@ private BaseLoaderCallback mLoadeCallback= new BaseLoaderCallback(this){
         outState.putInt(ChangeBtnImg,chageBtnImg);          //흑백 컬러 체인지 버튼 이미지 설정
         outState.putInt(StikerId,mStikerId);                //스티커 아이디
         outState.putBoolean(StikerOn,faceView.getStikerOn());             //스티커 on off
+        outState.putBoolean(Front,faceView.getFront());
     }
 
     @Override
@@ -196,17 +224,25 @@ private BaseLoaderCallback mLoadeCallback= new BaseLoaderCallback(this){
                 }
                 else if(effect == mCvCameraView.mMangaEffectData.SKETCH_C)
                 {
+                    chageBtnImg = R.drawable.presence_perple;
+                    changeBtm.setBackground(getDrawable(chageBtnImg));
+                    mCvCameraView.mMangaEffectData.setEffect(mCvCameraView.mMangaEffectData.PAINT);
+                    effect = mCvCameraView.mMangaEffectData.PAINT;
+                }
+                else if(effect == mCvCameraView.mMangaEffectData.PAINT)
+                {
                     chageBtnImg = android.R.drawable.presence_invisible;
-                    changeBtm.setBackground(getDrawable(android.R.drawable.presence_invisible));
+                    changeBtm.setBackground(getDrawable(chageBtnImg));
                     mCvCameraView.mMangaEffectData.setEffect(mCvCameraView.mMangaEffectData.SKETCH);
                     effect = mCvCameraView.mMangaEffectData.SKETCH;
                 }
+
                 break;
             case R.id.stikerBtm:            //스티커 on off 버튼
                 faceView.setVisibility(View.VISIBLE);
 
                 faceView.setSize(mCvCameraView.getWidth(),mCvCameraView.getHeight());
-                LinearLayout container = (LinearLayout)findViewById(R.id.stikerContainer);
+                RelativeLayout container = (RelativeLayout)findViewById(R.id.stikerContainer);
                 if(container.getChildCount() <=0)
                 {
                     StikerFragment fr = new StikerFragment();
@@ -216,6 +252,26 @@ private BaseLoaderCallback mLoadeCallback= new BaseLoaderCallback(this){
                     fragmentTransaction.addToBackStack(null);   //Back을 눌렀을때 이전 상태로 되돌아간다.
                     fragmentTransaction.commit();
                 }
+
+                break;
+            case R.id.shootBtn:
+                String name = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                File mfile=new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),"DayToon");
+                if(!mfile.exists()){
+                    if(!mfile.mkdir()){
+                        Log.d("메인", "사진파일 디렉터리ㅣ 생성실패");
+                    }
+                }
+                String filename=File.separator+"IMG_"+name+".jpg";
+                String path =(mfile.getPath()+filename);
+
+                faceView.setDrawingCacheEnabled(true);
+                Bitmap faceBitmap = faceView.getDrawingCache();
+                Bitmap faceBmp = Bitmap.createBitmap(faceBitmap);
+                mCvCameraView.takePicture(path, faceBmp);
+                faceView.setDrawingCacheEnabled(false);
+
+                Toast.makeText(this, path + " saved", Toast.LENGTH_SHORT).show();
 
                 break;
             case R.id.homeBtm:
@@ -231,6 +287,7 @@ private BaseLoaderCallback mLoadeCallback= new BaseLoaderCallback(this){
     public void onGetItemId(int id) {
         mStikerId = id;
         faceView.setBitmapId(id);
+        Log.d("스티커 클릭","스티커 ID : "+id);
     }
 
     @Override
@@ -260,7 +317,11 @@ private BaseLoaderCallback mLoadeCallback= new BaseLoaderCallback(this){
             mLoadeCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
         }
 
-        sensorManager.registerListener(this,sensor,SensorManager.SENSOR_DELAY_UI);
+       // sensorManager.registerListener(this,sensor,SensorManager.SENSOR_DELAY_UI);      //방향센서
+
+        sensorManager.registerListener(this,accelerometer, SensorManager.SENSOR_DELAY_UI);             //가속도 센서
+        sensorManager.registerListener(this,magnetometer, SensorManager.SENSOR_DELAY_UI);             //자력센서
+
     }
 
     @Override
@@ -281,11 +342,43 @@ private BaseLoaderCallback mLoadeCallback= new BaseLoaderCallback(this){
 
          faceView.setSize(mCvCameraView.getWidth(),mCvCameraView.getHeight());
 
+        rgbBmp = Bitmap.createBitmap(mCvCameraView.getWidth(),mCvCameraView.getHeight(), Bitmap.Config.ARGB_8888);
+        mCvCameraView.mPreviewFrame = new Mat(mCvCameraView.getWidth(), mCvCameraView.getHeight(), CV_8UC3);
     }
 
     @Override
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
 
+        /*
+            Mat mrgb  = new Mat(inputFrame.rgba().size(),CV_8UC3);
+            if(mCvCameraView.mframe != null)
+            {
+                Bitmap frameBmp = BitmapFactory.decodeByteArray(mCvCameraView.mframe,0,mCvCameraView.mframe.length);
+
+                Size size = new Size(frameBmp.getWidth(),frameBmp.getHeight());
+                Mat mtmp = new Mat(size, CV_8UC3);
+
+                Bitmap result = Bitmap.createBitmap(frameBmp.getWidth(), frameBmp.getHeight(), Bitmap.Config.ARGB_8888);
+                Canvas c = new Canvas(result);
+                c.drawBitmap(frameBmp,0,0,null);
+
+                Utils.bitmapToMat(result,mtmp);
+                Imgproc.cvtColor(mtmp,mtmp,Imgproc.COLOR_BGR2GRAY);
+
+                Bitmap bmp = Bitmap.createBitmap(frameBmp.getWidth(),frameBmp.getHeight(), Bitmap.Config.ARGB_8888);
+                Utils.matToBitmap(mtmp,bmp);
+
+                Imgproc.cvtColor(inputFrame.rgba(), mrgb ,Imgproc.COLOR_BGRA2BGR);
+
+                Log.d("프레임비트맵","널아님"+frameBmp.getHeight());
+                faceView.setCascadeFaces(mCvCameraView.startFaceDetect(inputFrame.gray()), frameBmp);
+
+            }
+            else
+            {
+                Log.d("프레임비트맵","널임");
+            }
+*/
 
             return inputFrame.rgba();
 
@@ -350,31 +443,7 @@ private BaseLoaderCallback mLoadeCallback= new BaseLoaderCallback(this){
         mLoadeCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
     }
 
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
 
-        String name = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        File mfile=new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),"DayToon");
-        if(!mfile.exists()){
-            if(!mfile.mkdir()){
-                Log.d("메인", "사진파일 디렉터리ㅣ 생성실패");
-            }
-        }
-        String filename=File.separator+"IMG_"+name+".jpg";
-        String path =(mfile.getPath()+filename);
-
-
-
-
-            faceView.setDrawingCacheEnabled(true);
-            Bitmap faceBitmap = faceView.getDrawingCache();
-            mCvCameraView.takePicture(path, faceBitmap);
-
-
-        Toast.makeText(this, path + " saved", Toast.LENGTH_SHORT).show();
-
-        return false;
-    }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
@@ -384,43 +453,107 @@ private BaseLoaderCallback mLoadeCallback= new BaseLoaderCallback(this){
     @Override
     public void onSensorChanged(SensorEvent event) {
 
-            faceView.setFaces(mCvCameraView.getFaces());
-            faceView.invalidate();
+        faceView.setFaces(mCvCameraView.getFaces());
+        faceView.invalidate();
 
+        if(mCvCameraView.isCameraOpen()){
+            int degrees=0;
+            switch (event.sensor.getType()) //각 센서로부터 값을 받아온다.
+            {
+                case Sensor.TYPE_ACCELEROMETER:
+                    float x = event.values[0];
+                    float y = event.values[1];
+                    String str="";
+                    if(x > 5 && y < 5)
+                    {
+                        degrees = 90;
+                        mCvCameraView.setOrientation(true, degrees);
+                        faceView.setIsLand(true);
+                        faceView.setRotateDegree(degrees);
+                    }
+                    else if(x < -5 && y > -5)
+                    {
+                        degrees = 270;
+                        mCvCameraView.setOrientation(true, degrees);
+                        faceView.setIsLand(true);
+                        faceView.setRotateDegree(degrees);
 
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
-        int rotation = this.getWindowManager().getDefaultDisplay().getRotation();
-        int degrees=0;
-        if(mCvCameraView.isCameraOpen()) {
-            switch (rotation) {
-                case Surface.ROTATION_0:
-                    degrees = 0;
-                    mCvCameraView.setOrientation(false, degrees);
+                    }
+                    else if(x > -5 && y >5)
+                    {
+                        degrees = 0;
+                        mCvCameraView.setOrientation(false, degrees);
+                        faceView.setIsLand(false);
+                        faceView.setRotateDegree(degrees);
 
-                     faceView.setIsLand(false);
+                    }
+                    else if(x < 5 && y < -5)
+                    {
+                        degrees = 180;
+                        mCvCameraView.setOrientation(false, degrees);
+                        faceView.setIsLand(false);
+                        faceView.setRotateDegree(degrees);
+
+                    }
+
                     break;
-                case Surface.ROTATION_90:
-                    degrees = 90;
-                     mCvCameraView.setOrientation(true,degrees);
 
-                    faceView.setIsLand(true);
-                    break;
-                case Surface.ROTATION_180:
-                    degrees = 180;
-                     mCvCameraView.setOrientation(false,degrees);
-
-                    faceView.setIsLand(false);
-                    break;
-                case Surface.ROTATION_270:
-                    degrees = 270;
-                     mCvCameraView.setOrientation(true,degrees);
-
-                    faceView.setIsLand(true);
-                    break;
             }
-
         }
 
+
+
+
+/*
+        switch (event.sensor.getType()) //각 센서로부터 값을 받아온다.
+        {
+            case Sensor.TYPE_ACCELEROMETER:
+                mGravity = event.values.clone();
+                break;
+            case Sensor.TYPE_MAGNETIC_FIELD:
+                mGeoMagnetic = event.values.clone();
+                break;
+        }
+
+        //둘다 값을 받아왔을 때만
+        if(mGravity !=null && mGeoMagnetic !=null)
+        {
+            float R[] = new float[9];
+            float I[] = new float[9];
+            boolean success = SensorManager.getRotationMatrix(R,I,mGravity,mGeoMagnetic);
+            SensorManager.remapCoordinateSystem(R,SensorManager.AXIS_X,SensorManager.AXIS_Z,R);
+            if(success)
+            {
+                float[] orientation = new float[3];
+                SensorManager.getOrientation(R,orientation);
+
+                float degreeZ = (float)Math.toDegrees(orientation[0]);
+                float degreeX = (float)Math.toDegrees(orientation[1]);
+                float degreeY = (float)Math.toDegrees(orientation[2]);
+
+
+
+                double degreeZ = (-Math.cos(orientation[1]-Math.PI/2));
+                double degreeX = (Math.cos(orientation[0])*Math.cos(orientation[1]));
+                double degreeY = (Math.sin(orientation[0])*Math.cos(orientation[1]));
+
+
+
+                int degreeZ = (int)Math.toDegrees(Math.cos(orientation[1])*Math.sin(orientation[2]-Math.PI/2));
+                int degreeX = (int)Math.toDegrees(-Math.cos(orientation[0])*Math.sin(orientation[1])*Math.cos(orientation[2])
+                +Math.sin(orientation[0])*Math.sin(orientation[2]));
+                int degreeY = (int)Math.toDegrees(-Math.sin(orientation[0])*Math.sin(orientation[1])*Math.cos(orientation[2])
+                - Math.cos(orientation[0])*Math.sin(orientation[2]));
+
+
+
+                String str = String.format("%.3f",degreeZ)+"\n"+String.format("%.3f",degreeX)+"\n"+String.format("%.3f",degreeY);
+                tt.setText(str);
+                tt.show();
+                Log.d("회전각도","회전각 : "+degreeY);
+            }
+        }
+*/
 
 
 /*

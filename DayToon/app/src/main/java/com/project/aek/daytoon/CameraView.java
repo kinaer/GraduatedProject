@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+
 import android.hardware.Camera;
 
 import android.os.Environment;
@@ -15,6 +16,10 @@ import android.util.AttributeSet;
 import org.opencv.android.JavaCameraView;
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfRect;
+import org.opencv.core.Rect;
+import org.opencv.imgproc.Imgproc;
+import org.opencv.objdetect.CascadeClassifier;
 
 import android.hardware.Camera.Size;
 import android.util.Log;
@@ -27,8 +32,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -51,13 +58,87 @@ public class CameraView extends JavaCameraView implements Camera.PictureCallback
     private int degree;
     protected Bitmap mFaceBitamp;
     private boolean isStiker = false;
+    private Mat mGray;
+    private Context mContext;
 
 
 
-    public CameraView(Context context, AttributeSet attri){
-        super(context,attri);
+    private CascadeClassifier mCascadeFace;         //얼굴검출 Cascade
+    //ArrayList<Rect> faces;                          //검출된 얼굴
+
+
+
+    public CameraView(Context context, AttributeSet attr){
+        super(context,attr);
+        mContext =context;
 
     }
+    public void loadCascade()
+    {
+        try{
+            InputStream inStream = getResources().openRawResource(R.raw.lbpcascade_frontalface);
+
+            File cascadeDir = mContext.getDir("cascade", Context.MODE_PRIVATE);  //주어진 이름의 응용 프로그램 하위 디렉터리를 얻거나 생성한다.
+            //getDir 로 얻어서 만든 파일은 영구보관
+            //getDir() : 내부스토리지 공간에 디렉토리를 생성하고나 오픈한다.
+            //MODE_PRIVATE(사적인 파일), MODE_APPEND(파일의 끝에 추가) ,
+            //MODE_WORLD_READABLE(다른 애플리케이션이 읽을수있음), MODE_WORLD_WRITEABLE(다른 애플리케이션일 쓸수있음)
+            File cascadeFaceFile = new File(cascadeDir,"lbpcascade_frontalface.xml");  //cascade만들거나 호출
+            FileOutputStream outputStream;
+            outputStream = new FileOutputStream(cascadeFaceFile);
+
+            byte[] buf = new byte[4096];      //파일 내용을 읽을 버퍼
+            int rdBytes;
+            while((rdBytes = inStream.read(buf)) != -1)         //읽은 내용이 있으면
+            {
+                outputStream.write(buf,0,rdBytes);                //파일에 쓴다.
+                Log.d("파일에 쓴다","쓴다");
+            }
+            outputStream.close();
+            inStream.close();
+            //=======================================lbpcascade_frontalface.xml를 읽은 부분=================
+            //만든 파일을 읽어 Cascade생성
+            mCascadeFace = new CascadeClassifier(cascadeFaceFile.getAbsolutePath());
+            mCascadeFace.load(cascadeFaceFile.getAbsolutePath());       //생성한다음 반드시 읽어와야 로드가 된다.
+            if(mCascadeFace.empty())
+            {
+                Log.e("CameraView :: Cascade","Failed to load cascade classifier");
+                mCascadeFace = null;
+            }
+            else
+            {
+                Log.i("CameraView :: Cascade", "Loaded cascade classifier from "+ cascadeFaceFile.getAbsolutePath());
+                //성공적으로 읽었으면 파일을 지워준다.
+                cascadeFaceFile.delete();
+            }
+        }
+        catch (IOException e)
+        {
+
+        }
+        mGray = new Mat();
+        //mPreviewFrame = new Mat(getWidth(),getHeight(),CV_8UC3);
+       // faces = new ArrayList<Rect>();
+    }
+    //얼굴을 검출하는거
+    public Rect[] startFaceDetect(Mat gray)
+    {
+        Imgproc.cvtColor(mPreviewFrame,mGray,Imgproc.COLOR_BGR2GRAY);
+       // mGray = gray;
+        MatOfRect faces = new MatOfRect();
+        mCascadeFace.detectMultiScale(mGray,faces,1.1,2,2,new org.opencv.core.Size(80,80), new org.opencv.core.Size());
+
+        Rect[] facesArray = faces.toArray();
+
+        return facesArray;
+    }
+    public Mat getPreviewFrame()
+    {
+        return mPreviewFrame;
+    }
+
+
+
     public Camera.Face[] getFaces()
     {
 
@@ -78,18 +159,7 @@ public class CameraView extends JavaCameraView implements Camera.PictureCallback
     public int getmFHeight(){
         return mFHeight;
     }
-    public boolean isEffectSupported(){
-        //제공되는 컬러이펙트가 있는지 없는지 확인
-        return (mCamera.getParameters().getColorEffect() != null);
-    }
 
-    public void setViewSize(int width, int height)
-    {
-        disconnectCamera(); //카메라 Thread중지
-        mMaxHeight = height; //CameraBridgeViewBase에 있다.
-        mMaxWidth = width;   //카메라 해상도를 결정하는 변수다
-        connectCamera(mMaxWidth,mMaxHeight);    //이 크기로 다시 카메라 Thread실행
-    }
 
     public int getDegree(){
         return degree;
@@ -115,21 +185,21 @@ public class CameraView extends JavaCameraView implements Camera.PictureCallback
             }
             else if(degree == 90)       //90 가로
             {
-                setDisplayOrientation(mCamera, 0);
+                setDisplayOrientation(mCamera, 90);
                 param.setRotation(0);
-                mCamera.setPreviewDisplay(getHolder());
+               // mCamera.setPreviewDisplay(getHolder());
             }
             else if(degree == 180)  //180 세로
             {
-                //setDisplayOrientation(mCamera, 90);
+                setDisplayOrientation(mCamera, 90);
                 param.setRotation(270);
-                mCamera.setPreviewDisplay(getHolder());
+                //mCamera.setPreviewDisplay(getHolder());
             }
             else if(degree == 270)  //270 가로
             {
-                setDisplayOrientation(mCamera, 180);
+                setDisplayOrientation(mCamera, 90);
                 param.setRotation(180);
-                mCamera.setPreviewDisplay(getHolder());
+               // mCamera.setPreviewDisplay(getHolder());
             }
             if(degree==0  && mCameraIndex == Camera.CameraInfo.CAMERA_FACING_FRONT)
             {
@@ -184,6 +254,8 @@ public class CameraView extends JavaCameraView implements Camera.PictureCallback
 
         Bitmap temp = BitmapFactory.decodeByteArray(data,0,data.length); //바이트를 비트맵으로 변환
         temp = PictureRotate(temp);
+
+        mFaceBitamp = StickerRotate(mFaceBitamp);
 
         //리사이즈  영상이 너무크면 처리하는데 시간이 오래걸림
         temp = BitmapControl.resizeBitmap(temp);
@@ -249,11 +321,33 @@ public class CameraView extends JavaCameraView implements Camera.PictureCallback
         disconnectCamera();
         connectCamera(mMaxWidth,mMaxHeight);
         mCamera.startPreview();
-        mCamera.setPreviewCallback(this);
+       // mCamera.setPreviewCallback(this);
     }
     protected int getCameraId()
     {
         return mCameraIndex;
+    }
+
+    protected Bitmap StickerRotate(Bitmap bitmap)
+    {
+        if(degree == 0)
+        {
+
+        }
+        else if(degree == 90)
+        {
+            bitmap = BitmapControl.bmpRotate(bitmap,270);
+        }
+        else if(degree == 180)
+        {
+            bitmap = BitmapControl.bmpRotate(bitmap, 180);
+        }
+        else if(degree == 270)
+        {
+            bitmap = BitmapControl.bmpRotate(bitmap, 90);
+        }
+        return bitmap;
+
     }
 
     protected Bitmap PictureRotate(Bitmap bitmap)

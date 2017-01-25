@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.hardware.Camera;
@@ -16,6 +17,12 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+
+import com.project.aek.daytoon.widget.Sticker;
+
+import org.opencv.android.Utils;
+import org.opencv.core.Core;
+import org.opencv.core.Mat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +49,14 @@ public class FaceDrawView extends View {
     private boolean isLand =false;
     private boolean isFont=false;
     Context mContext;
+
+    ArrayList<Sticker> stikers = new ArrayList<Sticker>();
+
+    private int rotateDegree = 0;
+
+    org.opencv.core.Rect[] mCascadeFaces;
+    Bitmap mrgb;
+
     public FaceDrawView(Context context)
     {
         super(context);
@@ -75,10 +90,20 @@ public class FaceDrawView extends View {
     {
         isFont=setFront;
     }
+    public boolean getFront(){return isFont;}
     public void setIsLand(boolean setLand) {isLand = setLand;}
     public void setFaces(Camera.Face[] faces)
     {
         this.faces=faces;
+    }
+    public void setCascadeFaces(org.opencv.core.Rect[] faces,Bitmap rgb)
+    {
+        mrgb=rgb;
+        mCascadeFaces = faces;
+    }
+    public void setRotateDegree(int degree)
+    {
+        rotateDegree = degree;
     }
     public void setStikerOn(boolean on)
     {
@@ -102,76 +127,104 @@ public class FaceDrawView extends View {
             currentId = imgId;
         }
         Log.d("스티커 아이디"," "+currentId);
-        iStiker = BitmapFactory.decodeResource(mContext.getResources(),imgId);
-
-    }
-    public void reSizeBitmap(RectF rect)
-    {
-
-        if(isLand)
-        {
-
-            iWidth = (int)(rect.width() *1.5f);
-            iHeight = (int)(rect.height() * 2f);
-            iStiker = Bitmap.createScaledBitmap(iStiker,iWidth,iHeight,true);
-            x1 = (int)(rect.centerX()-iWidth/2);        //왼쪽위 좌표들
-            y1 = (int)(rect.centerY()-iHeight/(1.8));
-
-        }
-        else
-        {
-            iWidth = (int)(rect.width() *2.2f);
-            iHeight = (int)(rect.height() * 1.4f);
-            iStiker = Bitmap.createScaledBitmap(iStiker,iWidth,iHeight,true);
-            x1 = (int)(rect.centerX()-iWidth/2);        //왼쪽위 좌표들
-           y1 = (int)(rect.centerY()-iHeight/(2));
-
-        }
+        //iStiker = BitmapFactory.decodeResource(mContext.getResources(),imgId);
 
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
 
+        /*
+        if(mrgb !=null)
+        {
+           // Bitmap rgbBmp = Bitmap.createBitmap(mrgb.cols(),mrgb.rows(), Bitmap.Config.ARGB_8888);
+           // Utils.matToBitmap(mrgb, rgbBmp);
+            canvas.drawBitmap(mrgb,0,0,paint);
+        }
+
+        if(mCascadeFaces != null){
+            List<RectF> facesRect = new ArrayList<RectF>();
+            for(org.opencv.core.Rect r : mCascadeFaces)
+            {
+
+
+                Point center = new Point();
+                center.x = (int)(r.x + r.width * 0.5);
+                center.y = (int)(r.y + r.height * 0.5);
+                Log.e("얼굴 X " ," "+r.x+" , "+r.width);
+                Log.e("얼굴 Y "," "+r.y+" , "+r.height);
+                float ml = (float)(center.x - (r.width * 0.5));
+                float mr = (float)(center.x + (r.width * 0.5));
+                float mt = (float)(center.y - (r.height * 0.5));
+                float mb = (float)(center.y + (r.height * 0.5));
+
+                RectF uRect = new RectF(ml,mt,mr,mb);
+                facesRect.add(uRect);
+
+            }
+
+            for (RectF temp : facesRect) {
+                canvas.drawRect(temp, paint);
+            }
+
+        }
+        else {
+            canvas = null;
+        }
+*/
+
+
         if(!stikerOn)
             return;
 
         Matrix matrix = new Matrix();
-        matrix.setScale(isFont ? -1 : 1,1);     //앞이면 좌우 반전시켜주고 아니면 그냥
-       // matrix.setScale(1,1);
+        if(!isFont && isLand)
+        {
+            matrix.setScale(1,1);
+
+        }
+        else if(isFont && isLand)
+        {
+            matrix.setScale(-1,1);
+        }
+        else if(isFont && !isLand)
+        {
+            matrix.setScale(-1,1);
+        }
+
+        else
+        {
+            matrix.setScale(1,1);
+        }
+        matrix.postRotate(90);                          //화면을 90도 회전했으므로 회전해준다.
         matrix.postScale(mWidth/2000f,mHeight/2000f);
         matrix.postTranslate(mWidth/2f,mHeight/2f);
 
+        paint.setColor(Color.RED);
+        paint.setStyle(Paint.Style.STROKE);
 
         if(faces !=null) {
             if (faces.length > 0) {
-                /*
-                List<Rect> faceRects;
-                faceRects = new ArrayList<Rect>();
-                */
+
 
                 List<RectF> faceRects;
                 faceRects = new ArrayList<RectF>();
 
-                ArrayList<Bitmap> stikers = new ArrayList<Bitmap>();
+                //ArrayList<Bitmap> stikers = new ArrayList<Bitmap>();
+                Bitmap[] mSticker = new Bitmap[faces.length];
+                for (int i = 0; i < faces.length; i++)
+                {
+                    stikers.add(new Sticker(mContext,currentId));
+                }
             //범위가 -1000,-1000 ~ 1000,1000 까지로 나옴
                 for (int i = 0; i < faces.length; i++) {
                     RectF rectF =new RectF(faces[i].rect);
                     matrix.mapRect(rectF);
-                    reSizeBitmap(rectF);
-                    stikers.add(iStiker);
-/*
-                    int left = faces[i].rect.left +1000;
-                    int right = faces[i].rect.right+1000;
-                    int top = faces[i].rect.top+1000;
-                    int bottom = faces[i].rect.bottom+1000;
+                    stikers.get(i).reSizeBitmap(rectF, isLand, rotateDegree);
+                   // reSizeBitmap(rectF);
+                    faceRects.add(rectF);
+                   // stikers.add(iStiker);
 
-
-                    int l = ((left)) * mWidth/2000;
-                    int t = ((top)) * mHeight/2000;
-                    int r = ((right)) * mWidth/2000;
-                    int b = ((bottom)) * mHeight/2000;
-*/
 
                   // Rect uRect = new Rect(l, t, r, b);
                   //  reSizeBitmap(uRect);
@@ -179,22 +232,34 @@ public class FaceDrawView extends View {
                    // faceRects.add(uRect);
                    // faceRects.add(rectF);
 
-                    Log.d("찾은얼굴",rectF.left+", "+rectF.top+", "+rectF.right+", "+rectF.bottom);
-                    Log.d("찾은얼굴",faces[i].rect.left+", "+faces[i].rect.top+", "+faces[i].rect.right+", "+faces[i].rect.bottom);
+                   // Log.d("찾은얼굴",rectF.left+", "+rectF.top+", "+rectF.right+", "+rectF.bottom);
+                   Log.d("찾은얼굴WH",rectF.centerX()+", "+rectF.centerY());
+                   // Log.d("찾은얼굴",faces[i].rect.left+", "+faces[i].rect.top+", "+faces[i].rect.right+", "+faces[i].rect.bottom);
                 }
+                /*
                 for(Bitmap temp : stikers)
                 {
                     canvas.drawBitmap(temp,x1,y1,paint);
                 }
-/*
+                */
+                for(Sticker temp : stikers)
+                {
+                    canvas.drawBitmap(temp.img, temp.x1, temp.y1, null);
+                }
+                /*
                 for (RectF temp : faceRects) {
                     canvas.drawRect(temp, paint);
                 }
-*/
+                */
+                for(int i=0; i<stikers.size(); i++) {
+                    stikers.remove(i);
+                }
+                stikers.clear();
             } else {
                 canvas = null;
             }
         }
+
         super.onDraw(canvas);
     }
 }

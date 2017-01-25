@@ -1,6 +1,7 @@
 package com.project.aek.daytoon.widget;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
@@ -27,7 +28,16 @@ public class StikerAdapter extends BaseAdapter {
 
     //스티커 배열
     Integer[] mStikers =
-            {R.drawable.a25, R.drawable.a26};
+            {R.drawable.icon_a01, R.drawable.icon_a02, R.drawable.icon_a03, R.drawable.icon_a04, R.drawable.icon_a05,
+             R.drawable.icon_a06, R.drawable.icon_a07, R.drawable.icon_a08, R.drawable.icon_a09, R.drawable.icon_a10,
+             R.drawable.icon_a11, R.drawable.icon_a12, R.drawable.icon_a13, R.drawable.icon_a14, R.drawable.icon_a15,
+             R.drawable.icon_a16, R.drawable.a25, R.drawable.a26};
+    //스티커 그리드뷰 배열
+    Integer[] mViewImg =
+            {R.drawable.a01, R.drawable.a02, R.drawable.a03, R.drawable.a04, R.drawable.a05,
+             R.drawable.a06, R.drawable.a07, R.drawable.a08, R.drawable.a09, R.drawable.a10,
+             R.drawable.a11, R.drawable.a12, R.drawable.a13, R.drawable.a14, R.drawable.a15,
+             R.drawable.a16, R.drawable.a25, R.drawable.a25 };
 
 
     public StikerAdapter(Context context,int Width, int Height)
@@ -90,7 +100,7 @@ public class StikerAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        return mStikers[position];
+        return mViewImg[position];
     }
 
     @Override

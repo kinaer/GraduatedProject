@@ -13,5 +13,6 @@
         android:horizontalSpacing="3dp"
         android:numColumns="auto_fit"
         android:stretchMode="columnWidth"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:paddingBottom="50dp" />
 </LinearLayout>

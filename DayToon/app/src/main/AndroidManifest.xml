@@ -26,6 +26,7 @@
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -70,7 +71,8 @@
 
         <activity
             android:name=".CameraActivity"
-            android:theme="@style/CustomTheme"></activity>
+            android:theme="@style/CustomTheme"
+           ></activity>
         <activity
             android:name=".EditPotoGallery"
             android:theme="@style/CustomTheme"></activity>

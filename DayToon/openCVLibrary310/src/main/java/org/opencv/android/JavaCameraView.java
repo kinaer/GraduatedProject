@@ -1,10 +1,16 @@
 package org.opencv.android;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.util.List;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
@@ -20,6 +26,7 @@ import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
+import org.opencv.objdetect.CascadeClassifier;
 
 /**
  * This class is an implementation of the Bridge View between OpenCV and Java Camera.
@@ -30,7 +37,8 @@ import org.opencv.imgproc.Imgproc;
  * When frame is delivered via callback from Camera - it processed via OpenCV to be
  * converted to RGBA32 and then passed to the external callback for modifications if required.
  */
-public class JavaCameraView extends CameraBridgeViewBase implements PreviewCallback,Camera.FaceDetectionListener {
+public class JavaCameraView extends CameraBridgeViewBase implements PreviewCallback,Camera.FaceDetectionListener{
+    //
 
     private static final int MAGIC_TEXTURE_ID = 10;
     private static final String TAG = "JavaCameraView";
@@ -45,6 +53,9 @@ public class JavaCameraView extends CameraBridgeViewBase implements PreviewCallb
     public static boolean FACESTATE = false;    //얼굴검출 작동중인지 아닌지 판별
 
     protected Camera.Face[] detectFace;         //검출된 얼굴 정보
+    public Mat mPreviewFrame;
+   // public Bitmap frameBmp;
+    public byte[] mframe;
 
     protected Camera mCamera;
     protected JavaCameraFrame[] mCameraFrame;
@@ -153,7 +164,8 @@ public class JavaCameraView extends CameraBridgeViewBase implements PreviewCallb
                     /* Select the size that fits surface considering maximum size allowed */
                     Size frameSize = calculateCameraFrameSize(sizes, new JavaCameraSizeAccessor(), width, height);
 
-                    params.setPreviewFormat(ImageFormat.NV21);
+                    //params.setPreviewFormat(ImageFormat.NV21);
+                    params.setPreviewFormat(ImageFormat.RGB_565);
                     Log.d(TAG, "Set preview size to " + Integer.valueOf((int)frameSize.width) + "x" + Integer.valueOf((int)frameSize.height));
                     params.setPreviewSize((int)frameSize.width, (int)frameSize.height);
 
@@ -231,6 +243,7 @@ public class JavaCameraView extends CameraBridgeViewBase implements PreviewCallb
                 result = false;
                 e.printStackTrace();
             }
+
         }
 
         return result;
@@ -293,7 +306,7 @@ public class JavaCameraView extends CameraBridgeViewBase implements PreviewCallb
         /* 1. We need to stop thread which updating the frames
          * 2. Stop camera and release it
          */
-        mCamera.setFaceDetectionListener(null);
+        //mCamera.setFaceDetectionListener(null);
         if(FACESTATE == true) {
             Log.d("얼굴찾기","종료");
             mCamera.stopFaceDetection(); //얼굴 찾기 중지
@@ -326,7 +339,15 @@ public class JavaCameraView extends CameraBridgeViewBase implements PreviewCallb
     public void onPreviewFrame(byte[] frame, Camera arg1) {
         Log.d(TAG, "Preview Frame received. Frame size: " + frame.length);
         synchronized (this) {
-            mFrameChain[mChainIdx].put(0, 0, frame);
+            //mFrameChain[mChainIdx].put(0, 0, frame);
+
+            //안면인식때문에 따로 받는 프레임
+            if(mPreviewFrame != null) {
+                mPreviewFrame.put(0, 0, frame);
+            }
+            mframe = frame;
+
+
             mCameraFrameReady = true;
             this.notify();
         }
@@ -417,4 +438,5 @@ public class JavaCameraView extends CameraBridgeViewBase implements PreviewCallb
         }
         detectFace = faces;     //검출된 얼굴 정보를 준다.
     }//onFaceDetection
+
 }

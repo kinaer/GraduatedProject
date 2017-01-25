@@ -407,6 +407,7 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
                 bmpValid = false;
             }
         }
+        //캔버스 안쓸거면 이거 주석해야되
         /*
         if (bmpValid && mCacheBitmap != null) {
             Canvas canvas = getHolder().lockCanvas();
@@ -436,7 +437,7 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
             }
 
         }
-         */
+*/
     }
 
     /**
