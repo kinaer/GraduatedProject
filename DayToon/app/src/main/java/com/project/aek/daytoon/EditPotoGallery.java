@@ -70,7 +70,7 @@ public class EditPotoGallery extends AppCompatActivity {
                 //비트맵으로 넘기고 싶었지만 인텐트로 넘기는건 40byte가 한계라고 한다
                 //그래서 경로를 넘겨 비트맵을 직접 생성한다.
 
-                String mFilePath = mPotoPath+File.separator+mFileList[position];
+                String mFilePath = mPotoPath+File.separator+mFileList[mFileList.length-position-1];
 
                 intent.putExtra("bm",mFilePath);
                 setResult(RESULT_OK,intent);
@@ -125,6 +125,7 @@ public class EditPotoGallery extends AppCompatActivity {
             }
 
             mFileList = mfile.list();   //디렉터리내에 file명들을 저장해
+
             //화면의 크기를 얻어온다.
             Display display = ((WindowManager)mContext.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
 
@@ -190,7 +191,7 @@ public class EditPotoGallery extends AppCompatActivity {
             {
                 imageView = (ImageView) convertView;
             }
-            Bitmap bm = BitmapFactory.decodeFile(mFilePath + File.separator + mFileList[position]);
+            Bitmap bm = BitmapFactory.decodeFile(mFilePath + File.separator + mFileList[mFileList.length-position-1]);
             imageView.setImageBitmap(bm);
 
             /*
