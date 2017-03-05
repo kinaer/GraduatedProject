@@ -34,7 +34,7 @@ import java.io.OutputStream;
  * Created by Admin on 2017-01-16.
  */
 
-public class SignUpPhotoActivity2 extends Activity {
+public class LayoutActivity extends Activity {
 
     private int id_view;
     private int picture_num = 0; //사진 컷 번호
@@ -370,8 +370,6 @@ public class SignUpPhotoActivity2 extends Activity {
         intent.putExtra("scale", true);
         intent.putExtra("return-data", true);
         startActivityForResult(intent, CROP_FROM_iMAGE); // CROP_FROM_CAMERA case문 이동
-
-
     }
 
 }

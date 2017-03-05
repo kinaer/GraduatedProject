@@ -42,7 +42,7 @@ public class MainMenuActivity extends AppCompatActivity {
                 break;
             case R.id.capture:
                 Log.d("_test","capture");
-                startActivity(new Intent(MainMenuActivity.this,SignUpPhotoActivity2.class));
+                startActivity(new Intent(MainMenuActivity.this,LayoutActivity.class));
                 break;
 
         }

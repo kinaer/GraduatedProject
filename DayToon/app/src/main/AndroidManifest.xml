@@ -65,7 +65,7 @@
             android:theme="@style/CustomTheme"/>
 
         <activity
-            android:name=".SignUpPhotoActivity2"
+            android:name=".LayoutActivity"
             android:theme="@style/CustomTheme"
             ></activity>
 
