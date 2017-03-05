@@ -201,7 +201,7 @@ public class MangaEffect{
 
             Imgproc.cvtColor(src,src,Imgproc.COLOR_BGRA2BGR);
             Imgproc.cvtColor(dst,dst,Imgproc.COLOR_BGRA2BGR);
-            OilPaintFilter(src,dst,20,9);
+            OilPaintFilter(src,dst,20,7);
 
             /*
             Imgproc.cvtColor(src,src,Imgproc.COLOR_BGRA2BGR);
