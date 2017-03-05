@@ -42,7 +42,7 @@ public class MangaEffect{
 
     }
 
-    public int getmMangeEffect(){
+    public int getEffect(){
         return effectType;
     }
     public void setEffect(int i){

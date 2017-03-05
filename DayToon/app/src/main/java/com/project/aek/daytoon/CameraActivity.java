@@ -214,7 +214,7 @@ private BaseLoaderCallback mLoadeCallback= new BaseLoaderCallback(this){
         switch (v.getId())
         {
             case R.id.changeBtm:            //전면 후면 체인지 버튼
-                effect = mCvCameraView.mMangaEffectData.getmMangeEffect();
+                effect = mCvCameraView.mMangaEffectData.getEffect();
                 if(effect == mCvCameraView.mMangaEffectData.SKETCH)
                 {
                     chageBtnImg = android.R.drawable.presence_online;
