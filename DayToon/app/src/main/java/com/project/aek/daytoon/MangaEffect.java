@@ -78,6 +78,40 @@ public class MangaEffect{
 
     public void cartoonFilter(Mat src,Mat dst)
     {
+
+        if(effectType == PAINT)
+    {
+
+        Imgproc.cvtColor(src,src,Imgproc.COLOR_BGRA2BGR);
+        Imgproc.cvtColor(dst,dst,Imgproc.COLOR_BGRA2BGR);
+        OilPaintFilter(src,dst,20,7);
+
+            /*
+            Imgproc.cvtColor(src,src,Imgproc.COLOR_BGRA2BGR);
+            Imgproc.cvtColor(dst,dst,Imgproc.COLOR_BGRA2BGR);
+
+            Mat tempSrc =new Mat(src.size(),CV_8UC3);
+            src.copyTo(tempSrc);
+
+            OilPaintFilter(src,tempSrc,20,9);
+
+            Mat img_gray = new Mat(src.size(),CV_8UC1);
+            Mat img_blur = new Mat(src.size(),CV_8UC1);
+            Mat img_edge = new Mat(src.size(),CV_8UC1);
+
+            Imgproc.cvtColor(src,img_gray,Imgproc.COLOR_BGR2GRAY);      //그레이스케일로 변환
+            Imgproc.medianBlur(img_gray,img_blur,9);                //미디안블로 적용
+            //세번째 인자 최대값,네번째 인자는 적용 알고리즘, 다섯번째는 임계값 유형, 여섯번째는 블록크기,
+            //이러고 이진화한걸 에지로 쓴다.
+            Imgproc.adaptiveThreshold(img_blur,img_edge,255,Imgproc.ADAPTIVE_THRESH_MEAN_C, Imgproc.THRESH_BINARY,9,2);
+
+            Imgproc.cvtColor(img_edge,img_edge,Imgproc.COLOR_GRAY2BGR);
+            Core.bitwise_and(tempSrc,img_edge,dst);
+*/
+
+    }
+        else
+        {
         Mat gray = new Mat(src.size(),CV_8UC1);
         Mat gray2 = new Mat(src.size(),CV_8UC1);
         Mat lMat1 = new Mat(src.size(),CV_8UC1);
@@ -87,19 +121,28 @@ public class MangaEffect{
         Mat lMat5 = new Mat(src.size(),CV_8UC1);
         Mat mWhite = new Mat(src.size(),CV_8UC1);   //흰색
         Mat mBlock = new Mat(src.size(), CV_8UC1);  //검은색
+        Mat mBlock2 = new Mat(src.size(), CV_8UC1); //진한 회색
+        Mat mBlock3 = new Mat(src.size(), CV_8UC1); //옅한 회색
+        Mat IMat6 = new Mat(src.size(), CV_8UC1);   //진한 회색 음영
+        Mat IMat7 = new Mat(src.size(), CV_8UC1);   //옅은 회색  음영
 
         mWhite.setTo(new Scalar(255,255,255));      //흰색으로 초기화
         mBlock.setTo(new Scalar(0,0,0));            //검은색으로 초기화
+        mBlock2.setTo(new Scalar(100,100,100));     //진한 회색으로 초기화
+        mBlock3.setTo(new Scalar(150,150,150));     //옅한 회색으로 초기화
         gray2.setTo(new Scalar(255,255,255));       //카툰 음영마스크를 입힐꺼라 흰색으로 초기화
         screentone(gray2);                  //gray2에 카툰 음영을 입힘
         Imgproc.cvtColor(src,gray,Imgproc.COLOR_BGR2GRAY);     //원본영상을 그레이스케일로 전환
         Imgproc.GaussianBlur(gray,gray,new Size(3,3),3);    //가우시안 블로를 한다.
 
        // Imgproc.Canny(gray,lMat3, 160,220);
-        Imgproc.Canny(gray,lMat4, 45,70);
-        Imgproc.threshold(gray, lMat1, 22, 255,Imgproc.THRESH_BINARY_INV);  //검정 효과 범위
-        Imgproc.threshold(gray, lMat2, 70, 255,Imgproc.THRESH_BINARY_INV);  //음영 효과 범위
-        Imgproc.Canny(gray, lMat3,90,140);       //외곽선 구할 에지
+        Imgproc.Canny(gray,lMat4, 25,45);
+        Imgproc.threshold(gray, lMat1, 40, 255,Imgproc.THRESH_BINARY_INV);  //검정 효과 범위
+        Imgproc.threshold(gray, IMat6, 50, 255, Imgproc.THRESH_BINARY_INV);  //진한 회색 효과 범위
+        Imgproc.threshold(gray, IMat7, 70, 255, Imgproc.THRESH_BINARY_INV);  //진한 회색 효과 범위
+        Imgproc.threshold(gray, lMat2, 90, 255,Imgproc.THRESH_BINARY_INV);  //음영 효과 범위
+        //Imgproc.Canny(gray, lMat3,90,140);       //외곽선 구할 에지
+        Imgproc.Canny(gray, lMat3,50,60);       //외곽선 구할 에지
 
        // Mat lMat6 = new Mat();
         ArrayList mList = new ArrayList(400);
@@ -111,6 +154,8 @@ public class MangaEffect{
 
             mWhite.copyTo(dst);
             gray2.copyTo(dst,lMat2);
+            mBlock3.copyTo(dst, IMat7);
+            mBlock2.copyTo(dst, IMat6);
             mBlock.copyTo(dst,lMat1);
             mBlock.copyTo(dst,lMat4);
 
@@ -118,6 +163,7 @@ public class MangaEffect{
         }
         else if(effectType == SKETCH_C)
         {
+
             Imgproc.cvtColor(src,src,Imgproc.COLOR_BGRA2BGR);
             int num_down = 2;           //다운 샘플링횟수
             int num_bilateral = 5;      //바이레터럴실행 횟수
@@ -154,12 +200,16 @@ public class MangaEffect{
             Imgproc.medianBlur(img_gray,img_blur,9);                //미디안블로 적용
             //세번째 인자 최대값,네번째 인자는 적용 알고리즘, 다섯번째는 임계값 유형, 여섯번째는 블록크기,
             //이러고 이진화한걸 에지로 쓴다.
-            Imgproc.adaptiveThreshold(img_blur,img_edge,255,Imgproc.ADAPTIVE_THRESH_MEAN_C, Imgproc.THRESH_BINARY,9,2);
+            //Imgproc.adaptiveThreshold(img_blur,img_edge,255,Imgproc.ADAPTIVE_THRESH_MEAN_C, Imgproc.THRESH_BINARY,9,2);
 
-            Imgproc.cvtColor(img_edge,img_edge,Imgproc.COLOR_GRAY2BGR);
-            Core.bitwise_and(tempSrc,img_edge,dst);
+            //Imgproc.cvtColor(img_edge,img_edge,Imgproc.COLOR_GRAY2BGR);
+            //Core.bitwise_and(tempSrc,img_edge,dst);
+            tempSrc.copyTo(dst);
 
-            /*
+            Imgproc.drawContours(dst,mList,-1,new Scalar(0,0,0),2);
+            Imgproc.findContours(lMat4,mList,lMat5,Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_NONE);   //외곽선을 찾는다
+            Imgproc.drawContours(dst,mList,-1,new Scalar(0,0,0),1);
+/*
             //바이레터럴 필터가 매우 느리므로 이미지를 축소 시켜 작업하고 복원한다.
             Imgproc.cvtColor(src,src,Imgproc.COLOR_BGRA2BGR);
             Size size = src.size();
@@ -185,48 +235,19 @@ public class MangaEffect{
 
             dst.setTo(new Scalar(0));       //검정색으로 초기화
 
-            Imgproc.cvtColor(img,img,Imgproc.COLOR_BGR2HSV);        //HSV로 변경해서 채도랑 명도를 건든다.
-            colorScreentone(img);
-            Imgproc.cvtColor(img,img,Imgproc.COLOR_HSV2BGR);        //다시 돌려준다.
+           // Imgproc.cvtColor(img,img,Imgproc.COLOR_BGR2HSV);        //HSV로 변경해서 채도랑 명도를 건든다.
+           // colorScreentone(img);
+           // Imgproc.cvtColor(img,img,Imgproc.COLOR_HSV2BGR);        //다시 돌려준다.
 
             mWhite.copyTo(gray);
             mBlock.copyTo(gray,lMat1);
             //mBlock.copyTo(gray,lMat4);
             img.copyTo(dst,gray);
             Imgproc.drawContours(dst,mList,-1,new Scalar(0,0,0),2);
-            */
-        }
-        else if(effectType == PAINT)
-        {
-
-            Imgproc.cvtColor(src,src,Imgproc.COLOR_BGRA2BGR);
-            Imgproc.cvtColor(dst,dst,Imgproc.COLOR_BGRA2BGR);
-            OilPaintFilter(src,dst,20,7);
-
-            /*
-            Imgproc.cvtColor(src,src,Imgproc.COLOR_BGRA2BGR);
-            Imgproc.cvtColor(dst,dst,Imgproc.COLOR_BGRA2BGR);
-
-            Mat tempSrc =new Mat(src.size(),CV_8UC3);
-            src.copyTo(tempSrc);
-
-            OilPaintFilter(src,tempSrc,20,9);
-
-            Mat img_gray = new Mat(src.size(),CV_8UC1);
-            Mat img_blur = new Mat(src.size(),CV_8UC1);
-            Mat img_edge = new Mat(src.size(),CV_8UC1);
-
-            Imgproc.cvtColor(src,img_gray,Imgproc.COLOR_BGR2GRAY);      //그레이스케일로 변환
-            Imgproc.medianBlur(img_gray,img_blur,9);                //미디안블로 적용
-            //세번째 인자 최대값,네번째 인자는 적용 알고리즘, 다섯번째는 임계값 유형, 여섯번째는 블록크기,
-            //이러고 이진화한걸 에지로 쓴다.
-            Imgproc.adaptiveThreshold(img_blur,img_edge,255,Imgproc.ADAPTIVE_THRESH_MEAN_C, Imgproc.THRESH_BINARY,9,2);
-
-            Imgproc.cvtColor(img_edge,img_edge,Imgproc.COLOR_GRAY2BGR);
-            Core.bitwise_and(tempSrc,img_edge,dst);
 */
-
         }
+        }
+
 
     }//cartoonFilter
     void colorScreentone(Mat src)
@@ -301,7 +322,7 @@ public class MangaEffect{
             for(int x=0; x<gray.cols(); x++)
             {
                 if((x%3==0))
-                    gray.put(y,x,150);
+                    gray.put(y,x,180);
             }
         }
     }
