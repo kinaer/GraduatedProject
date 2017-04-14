@@ -175,7 +175,10 @@ public class CameraView extends JavaCameraView implements Camera.PictureCallback
         Camera.Parameters param = mCamera.getParameters();
         this.isLand=isLand;
         this.degree=degree;
-
+        param.setWhiteBalance(Camera.Parameters.WHITE_BALANCE_AUTO);
+        int num = param.getMaxExposureCompensation();
+        Log.d("화면 밝기 최대"," "+num);
+        param.setExposureCompensation(num);
         try{
             if(degree == 0)     //0 세로
             {

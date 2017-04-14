@@ -133,16 +133,18 @@ public class MangaEffect{
         gray2.setTo(new Scalar(255,255,255));       //카툰 음영마스크를 입힐꺼라 흰색으로 초기화
         screentone(gray2);                  //gray2에 카툰 음영을 입힘
         Imgproc.cvtColor(src,gray,Imgproc.COLOR_BGR2GRAY);     //원본영상을 그레이스케일로 전환
-        Imgproc.GaussianBlur(gray,gray,new Size(3,3),3);    //가우시안 블로를 한다.
+        //Imgproc.GaussianBlur(gray,gray,new Size(3,3),3);    //가우시안 블로를 한다.
+
+            //brightnessCorrection(gray);
 
        // Imgproc.Canny(gray,lMat3, 160,220);
-        Imgproc.Canny(gray,lMat4, 25,45);
+        Imgproc.Canny(gray,lMat4, 80,90);
         Imgproc.threshold(gray, lMat1, 40, 255,Imgproc.THRESH_BINARY_INV);  //검정 효과 범위
         Imgproc.threshold(gray, IMat6, 50, 255, Imgproc.THRESH_BINARY_INV);  //진한 회색 효과 범위
         Imgproc.threshold(gray, IMat7, 70, 255, Imgproc.THRESH_BINARY_INV);  //진한 회색 효과 범위
         Imgproc.threshold(gray, lMat2, 90, 255,Imgproc.THRESH_BINARY_INV);  //음영 효과 범위
         //Imgproc.Canny(gray, lMat3,90,140);       //외곽선 구할 에지
-        Imgproc.Canny(gray, lMat3,50,60);       //외곽선 구할 에지
+        Imgproc.Canny(gray, lMat3,120,140);       //외곽선 구할 에지
 
        // Mat lMat6 = new Mat();
         ArrayList mList = new ArrayList(400);
@@ -151,6 +153,8 @@ public class MangaEffect{
 
         if(effectType == SKETCH)
         {
+            //brightnessCorrection(gray);
+            //gray.copyTo(dst);
 
             mWhite.copyTo(dst);
             gray2.copyTo(dst,lMat2);
@@ -160,6 +164,7 @@ public class MangaEffect{
             mBlock.copyTo(dst,lMat4);
 
             Imgproc.drawContours(dst,mList,-1,new Scalar(0,0,0),2);
+
         }
         else if(effectType == SKETCH_C)
         {
@@ -330,6 +335,38 @@ public class MangaEffect{
         setCaptureFrame(width,height,data,frame,mSketchMode);
     }
 
+    //밝기 조절하는거
+    private void brightnessCorrection(Mat gray){
+        //그레이 스케일 영상만 받는다.
+        gray.convertTo(gray,CvType.CV_64FC1);
+        int graySize = (int)(gray.total() + gray.channels());
+        double[] data = new double[graySize];
+        gray.get(0,0,data);     //여기에 1차원배열로 만들어
+        double intensity=0;
+        double temp=0;
+        for(int i=0 ; i<graySize; ++i)
+        {
+            data[i] += 25;
+            if(data[i] >= 127)       //허연거면
+            {
+                intensity = (data[i] - 127) * 0.7;
+                temp = data[i] + intensity;
+            }
+            else if(data[i] < 127)
+            {
+                intensity = (127 - data[i]) * 0.7;
+                temp = data[i] - intensity;
+            }
+            if(temp >250)
+                temp = 255;
+            else if(temp < 5)
+                temp =0;
+            data[i] = temp;
+        }
+        gray.put(0,0,data);
+        gray.convertTo(gray,CvType.CV_8UC1);
+    }
+
     public void OilPaintFilter(Mat src, Mat dst, int levels, int filterSize)
     {
         int[] intensityBin = new int[levels];
@@ -353,8 +390,6 @@ public class MangaEffect{
         Size srcSize = src.size();
         float divide3 = 1/3.0f;
         float divide255 = 1/255.0f;
-        double[] data = null;
-        double[] tempData = null;
 
         src.convertTo(src, CvType.CV_64FC3);
         dst.convertTo(dst, CvType.CV_64FC3);

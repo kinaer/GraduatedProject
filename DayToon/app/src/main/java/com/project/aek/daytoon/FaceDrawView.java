@@ -134,45 +134,6 @@ public class FaceDrawView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
 
-        /*
-        if(mrgb !=null)
-        {
-           // Bitmap rgbBmp = Bitmap.createBitmap(mrgb.cols(),mrgb.rows(), Bitmap.Config.ARGB_8888);
-           // Utils.matToBitmap(mrgb, rgbBmp);
-            canvas.drawBitmap(mrgb,0,0,paint);
-        }
-
-        if(mCascadeFaces != null){
-            List<RectF> facesRect = new ArrayList<RectF>();
-            for(org.opencv.core.Rect r : mCascadeFaces)
-            {
-
-
-                Point center = new Point();
-                center.x = (int)(r.x + r.width * 0.5);
-                center.y = (int)(r.y + r.height * 0.5);
-                Log.e("얼굴 X " ," "+r.x+" , "+r.width);
-                Log.e("얼굴 Y "," "+r.y+" , "+r.height);
-                float ml = (float)(center.x - (r.width * 0.5));
-                float mr = (float)(center.x + (r.width * 0.5));
-                float mt = (float)(center.y - (r.height * 0.5));
-                float mb = (float)(center.y + (r.height * 0.5));
-
-                RectF uRect = new RectF(ml,mt,mr,mb);
-                facesRect.add(uRect);
-
-            }
-
-            for (RectF temp : facesRect) {
-                canvas.drawRect(temp, paint);
-            }
-
-        }
-        else {
-            canvas = null;
-        }
-*/
-
 
         if(!stikerOn)
             return;
