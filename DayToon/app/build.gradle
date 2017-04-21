@@ -38,4 +38,6 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile project(':openCVLibrary310')
     compile 'com.google.android.gms:play-services-appindexing:8.4.0'
+    compile 'net.simonvt.menudrawer:menudrawer:{latest-version}'
+    compile project(':menudrawer')
 }

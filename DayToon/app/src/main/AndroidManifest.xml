@@ -84,6 +84,9 @@
             android:name=".AddBalloonActivity"
             android:configChanges="orientation|keyboard|screenSize"
             android:theme="@style/CustomTheme" />
+        <activity
+            android:name=".ConversionActivity"
+            android:theme="@style/CustomTheme" />
 
         <meta-data
             android:name="com.google.android.gms.version"

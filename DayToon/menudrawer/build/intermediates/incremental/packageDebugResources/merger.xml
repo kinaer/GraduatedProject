@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config="main$Generated" generated="true"><source path="C:\thong\Project Ing\GraduatedProject\DayToon\menudrawer\res"/><source path="C:\thong\Project Ing\GraduatedProject\DayToon\menudrawer\build\generated\res\rs\debug"/><source path="C:\thong\Project Ing\GraduatedProject\DayToon\menudrawer\build\generated\res\resValues\debug"/></dataSet><dataSet config="debug$Generated" generated="true"><source path="C:\thong\Project Ing\GraduatedProject\DayToon\menudrawer\src\debug\res"/></dataSet><dataSet config="main" generated-set="main$Generated"><source path="C:\thong\Project Ing\GraduatedProject\DayToon\menudrawer\res"><file path="C:\thong\Project Ing\GraduatedProject\DayToon\menudrawer\res\values\attrs.xml" qualifiers=""><attr format="reference" name="menuDrawerStyle"/><declare-styleable name="MenuDrawer">
+
+        
+        <attr format="reference" name="mdContentBackground"/>
+
+        
+        <attr format="reference" name="mdMenuBackground"/>
+
+        
+        <attr format="dimension" name="mdMenuSize"/>
+
+        
+        <attr format="reference" name="mdActiveIndicator"/>
+
+        
+        <attr format="boolean" name="mdDropShadowEnabled"/>
+
+        
+        <attr format="dimension" name="mdDropShadowSize"/>
+
+        
+        <attr format="color" name="mdDropShadowColor"/>
+
+        
+        <attr format="reference" name="mdDropShadow"/>
+
+        
+        <attr format="dimension" name="mdTouchBezelSize"/>
+
+        
+        <attr format="boolean" name="mdAllowIndicatorAnimation"/>
+
+        
+        <attr format="integer" name="mdMaxAnimationDuration"/>
+
+        
+        <attr format="reference" name="mdSlideDrawable"/>
+
+        
+        <attr format="string" name="mdDrawerOpenUpContentDescription"/>
+
+        
+        <attr format="string" name="mdDrawerClosedUpContentDescription"/>
+
+        
+        <attr format="boolean" name="mdDrawOverlay"/>
+
+        
+        <attr format="enum" name="mdPosition">
+            <enum name="left" value="0"/>
+            <enum name="top" value="1"/>
+            <enum name="right" value="2"/>
+            <enum name="bottom" value="3"/>
+            <enum name="start" value="4"/>
+            <enum name="end" value="5"/>
+        </attr>
+    </declare-styleable></file><file path="C:\thong\Project Ing\GraduatedProject\DayToon\menudrawer\res\values\colors.xml" qualifiers=""><color name="md__defaultBackground">#FF555555</color></file><file path="C:\thong\Project Ing\GraduatedProject\DayToon\menudrawer\res\values\ids.xml" qualifiers=""><item name="md__content" type="id"/><item name="md__translationX" type="id"/><item name="md__translationY" type="id"/><item name="md__drawer" type="id"/><item name="mdContent" type="id"/><item name="mdMenu" type="id"/><item name="md__menu" type="id"/><item name="mdActiveViewPosition" type="id"/></file><file path="C:\thong\Project Ing\GraduatedProject\DayToon\menudrawer\res\values\strings.xml" qualifiers=""><string name="md__drawerOpenIndicatorDesc">Close drawer</string><string name="md__drawerClosedIndicatorDesc">Open drawer</string></file><file path="C:\thong\Project Ing\GraduatedProject\DayToon\menudrawer\res\values\styles.xml" qualifiers=""><style name="Widget.MenuDrawer">
+        <item name="mdMenuBackground">@color/md__defaultBackground</item>
+        <item name="mdContentBackground">?android:attr/windowBackground</item>
+        <item name="mdDrawerOpenUpContentDescription">@string/md__drawerOpenIndicatorDesc</item>
+        <item name="mdDrawerClosedUpContentDescription">@string/md__drawerClosedIndicatorDesc</item>
+    </style><style name="Widget"/></file></source><source path="C:\thong\Project Ing\GraduatedProject\DayToon\menudrawer\build\generated\res\rs\debug"/><source path="C:\thong\Project Ing\GraduatedProject\DayToon\menudrawer\build\generated\res\resValues\debug"/></dataSet><dataSet config="debug" generated-set="debug$Generated"><source path="C:\thong\Project Ing\GraduatedProject\DayToon\menudrawer\src\debug\res"/></dataSet><mergedItems><configuration qualifiers=""><declare-styleable name="MenuDrawer"><attr format="reference" name="mdContentBackground"/><attr format="reference" name="mdMenuBackground"/><attr format="dimension" name="mdMenuSize"/><attr format="reference" name="mdActiveIndicator"/><attr format="boolean" name="mdDropShadowEnabled"/><attr format="dimension" name="mdDropShadowSize"/><attr format="color" name="mdDropShadowColor"/><attr format="reference" name="mdDropShadow"/><attr format="dimension" name="mdTouchBezelSize"/><attr format="boolean" name="mdAllowIndicatorAnimation"/><attr format="integer" name="mdMaxAnimationDuration"/><attr format="reference" name="mdSlideDrawable"/><attr format="string" name="mdDrawerOpenUpContentDescription"/><attr format="string" name="mdDrawerClosedUpContentDescription"/><attr format="boolean" name="mdDrawOverlay"/><attr format="enum" name="mdPosition">
+            <enum name="left" value="0"/>
+            <enum name="top" value="1"/>
+            <enum name="right" value="2"/>
+            <enum name="bottom" value="3"/>
+            <enum name="start" value="4"/>
+            <enum name="end" value="5"/>
+        </attr></declare-styleable></configuration></mergedItems></merger>

@@ -1,6 +1,7 @@
 package com.project.aek.daytoon;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 
@@ -268,8 +269,23 @@ public class CameraView extends JavaCameraView implements Camera.PictureCallback
 
             temp = BitmapControl.combineBitmap(temp, mFaceBitamp);
 
+        try{
+
+            String tmpFilePath = Environment.getExternalStorageDirectory()+"/Android/data/"+mContext.getPackageName()+File.separator+"face.jpg";
+            OutputStream tmpFile = new BufferedOutputStream(new FileOutputStream(tmpFilePath));
+            temp.compress(Bitmap.CompressFormat.JPEG,100,tmpFile);
+            tmpFile.close();
+            Log.d("임시 파일 저장 장소"," "+tmpFilePath);
+            Intent intent = new Intent(mContext,ConversionActivity.class);
+            intent.putExtra("effectType",mMangaEffectData.getEffect());
+            intent.putExtra("tempFile", tmpFilePath);
+            mContext.startActivity(intent);
+        }
+        catch (Exception e){}
 
 
+
+        /*
         if (mApplyManga) {
             org.opencv.core.Size newSize = new org.opencv.core.Size(temp.getWidth(), temp.getHeight());
             Mat mtmp = new Mat(newSize, CV_8UC3);
@@ -294,6 +310,9 @@ public class CameraView extends JavaCameraView implements Camera.PictureCallback
                 e.printStackTrace();
             }
         }
+       */
+
+
         /*
         else {
             try {
@@ -314,7 +333,7 @@ public class CameraView extends JavaCameraView implements Camera.PictureCallback
             }
         }
         */
-        cameraReStart();
+       // cameraReStart();
 
     }
     public void cameraReStart()
