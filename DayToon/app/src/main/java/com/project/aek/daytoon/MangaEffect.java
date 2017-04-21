@@ -139,10 +139,10 @@ public class MangaEffect{
 
        Imgproc.Canny(gray,lMat4, 100,120);
         //Imgproc.Canny(gray,lMat4, 80,90);
-        Imgproc.threshold(gray, lMat1, 35, 255,Imgproc.THRESH_BINARY_INV);  //검정 효과 범위
+        Imgproc.threshold(gray, lMat1, 40, 255,Imgproc.THRESH_BINARY_INV);  //검정 효과 범위
         Imgproc.threshold(gray, IMat6, 60, 255, Imgproc.THRESH_BINARY_INV);  //진한 회색 효과 범위
-        Imgproc.threshold(gray, IMat7, 90, 255, Imgproc.THRESH_BINARY_INV);  //진한 회색 효과 범위
-        Imgproc.threshold(gray, lMat2, 110, 255,Imgproc.THRESH_BINARY_INV);  //음영 효과 범위
+        Imgproc.threshold(gray, IMat7, 80, 255, Imgproc.THRESH_BINARY_INV);  //진한 회색 효과 범위
+        Imgproc.threshold(gray, lMat2, 95, 255,Imgproc.THRESH_BINARY_INV);  //음영 효과 범위
         //Imgproc.Canny(gray, lMat3,120,140);       //외곽선 구할 에지
             Imgproc.Canny(gray, lMat3,140,160);
 
@@ -153,8 +153,7 @@ public class MangaEffect{
 
         if(effectType == SKETCH)
         {
-            //brightnessCorrection(gray);
-            //gray.copyTo(dst);
+
 
             mWhite.copyTo(dst);
             gray2.copyTo(dst,lMat2);
