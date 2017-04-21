@@ -37,10 +37,12 @@ public class MangaEffect{
 
     private int effectType;
     private boolean mSketchMode = false;
-
+    private int blackBr;        //범위를 -20~50 까지로 하자 시크바는 0~70 이니 -20 배야되
     public MangaEffect(){
-
+        blackBr = 35;
     }
+    public int getBlackBr(){return blackBr;}
+    public void setBlackBr(int br){blackBr=br;}
 
     public int getEffect(){
         return effectType;
@@ -67,7 +69,6 @@ public class MangaEffect{
         //CartoonifyImage(mSource,mDst, effectType,blursize);
         //Cartoonify(mSource,mDst,effectType);
 
-        Log.d("만가 이펙트","스케치 호출 완료");
         /*
         ImageView a;
         a.getDrawable();
@@ -134,19 +135,18 @@ public class MangaEffect{
         screentone(gray2);                  //gray2에 카툰 음영을 입힘
         Imgproc.cvtColor(src,gray,Imgproc.COLOR_BGR2GRAY);     //원본영상을 그레이스케일로 전환
         //Imgproc.GaussianBlur(gray,gray,new Size(3,3),3);    //가우시안 블로를 한다.
+            brightnessCorrection(gray);
 
-            //brightnessCorrection(gray);
+       Imgproc.Canny(gray,lMat4, 100,120);
+        //Imgproc.Canny(gray,lMat4, 80,90);
+        Imgproc.threshold(gray, lMat1, 35, 255,Imgproc.THRESH_BINARY_INV);  //검정 효과 범위
+        Imgproc.threshold(gray, IMat6, 60, 255, Imgproc.THRESH_BINARY_INV);  //진한 회색 효과 범위
+        Imgproc.threshold(gray, IMat7, 90, 255, Imgproc.THRESH_BINARY_INV);  //진한 회색 효과 범위
+        Imgproc.threshold(gray, lMat2, 110, 255,Imgproc.THRESH_BINARY_INV);  //음영 효과 범위
+        //Imgproc.Canny(gray, lMat3,120,140);       //외곽선 구할 에지
+            Imgproc.Canny(gray, lMat3,140,160);
 
-       // Imgproc.Canny(gray,lMat3, 160,220);
-        Imgproc.Canny(gray,lMat4, 80,90);
-        Imgproc.threshold(gray, lMat1, 40, 255,Imgproc.THRESH_BINARY_INV);  //검정 효과 범위
-        Imgproc.threshold(gray, IMat6, 50, 255, Imgproc.THRESH_BINARY_INV);  //진한 회색 효과 범위
-        Imgproc.threshold(gray, IMat7, 70, 255, Imgproc.THRESH_BINARY_INV);  //진한 회색 효과 범위
-        Imgproc.threshold(gray, lMat2, 90, 255,Imgproc.THRESH_BINARY_INV);  //음영 효과 범위
-        //Imgproc.Canny(gray, lMat3,90,140);       //외곽선 구할 에지
-        Imgproc.Canny(gray, lMat3,120,140);       //외곽선 구할 에지
-
-       // Mat lMat6 = new Mat();
+            // Mat lMat6 = new Mat();
         ArrayList mList = new ArrayList(400);
         Imgproc.findContours(lMat3,mList,lMat5,Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_NONE);   //외곽선을 찾는다
         //Imgproc.drawContours(gray, mList, -1,new Scalar(0,0,0),2);
@@ -163,7 +163,8 @@ public class MangaEffect{
             mBlock.copyTo(dst,lMat1);
             mBlock.copyTo(dst,lMat4);
 
-            Imgproc.drawContours(dst,mList,-1,new Scalar(0,0,0),2);
+
+           Imgproc.drawContours(dst,mList,-1,new Scalar(0,0,0),2);
 
         }
         else if(effectType == SKETCH_C)
@@ -344,17 +345,18 @@ public class MangaEffect{
         gray.get(0,0,data);     //여기에 1차원배열로 만들어
         double intensity=0;
         double temp=0;
+        int brRate = blackBr - 20;
         for(int i=0 ; i<graySize; ++i)
         {
-            data[i] += 25;
+            data[i] += brRate;
             if(data[i] >= 127)       //허연거면
             {
-                intensity = (data[i] - 127) * 0.7;
+                intensity = (data[i] - 127) * 0.4;
                 temp = data[i] + intensity;
             }
             else if(data[i] < 127)
             {
-                intensity = (127 - data[i]) * 0.7;
+                intensity = (127 - data[i]) * 0.4;
                 temp = data[i] - intensity;
             }
             if(temp >250)

@@ -255,23 +255,12 @@ private BaseLoaderCallback mLoadeCallback= new BaseLoaderCallback(this){
 
                 break;
             case R.id.shootBtn:
-                String name = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                File mfile=new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),"DayToon");
-                if(!mfile.exists()){
-                    if(!mfile.mkdir()){
-                        Log.d("메인", "사진파일 디렉터리ㅣ 생성실패");
-                    }
-                }
-                String filename=File.separator+"IMG_"+name+".jpg";
-                String path =(mfile.getPath()+filename);
-
                 faceView.setDrawingCacheEnabled(true);
                 Bitmap faceBitmap = faceView.getDrawingCache();
                 Bitmap faceBmp = Bitmap.createBitmap(faceBitmap);
-                mCvCameraView.takePicture(path, faceBmp);
-                faceView.setDrawingCacheEnabled(false);
+                mCvCameraView.takePicture(faceBmp);
 
-                Toast.makeText(this, path + " saved", Toast.LENGTH_SHORT).show();
+                faceView.setDrawingCacheEnabled(false);
 
                 break;
             case R.id.homeBtm:

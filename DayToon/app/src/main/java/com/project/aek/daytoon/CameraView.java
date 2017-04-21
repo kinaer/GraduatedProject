@@ -172,7 +172,14 @@ public class CameraView extends JavaCameraView implements Camera.PictureCallback
         else
             return true;
     }
+    private Camera.AutoFocusCallback myAutoFocusCallback = new Camera.AutoFocusCallback() {
+        @Override
+        public void onAutoFocus(boolean success, Camera camera) {
+
+        }
+    };
     public void setOrientation(boolean isLand,int degree){
+        if(!isCameraOpen())return;
         Camera.Parameters param = mCamera.getParameters();
         this.isLand=isLand;
         this.degree=degree;
@@ -180,6 +187,8 @@ public class CameraView extends JavaCameraView implements Camera.PictureCallback
         int num = param.getMaxExposureCompensation();
         Log.d("화면 밝기 최대"," "+num);
         param.setExposureCompensation(num);
+      //  param.setFocusMode(param.FOCUS_MODE_AUTO);
+        //mCamera.autoFocus(myAutoFocusCallback);
         try{
             if(degree == 0)     //0 세로
             {
@@ -225,9 +234,9 @@ public class CameraView extends JavaCameraView implements Camera.PictureCallback
 
     }
 
-    public void takePicture(final String fileName, Bitmap faceBitmap){
+    public void takePicture(Bitmap faceBitmap){
         Log.d("카메라뷰","take Picture");
-        this.mPictureFileName = fileName;
+       // this.mPictureFileName = fileName;
         mFaceBitamp = faceBitmap;
 
         //버퍼 클리어 프리뷰 이미지나 비디오를 초기화 하는 매소드
@@ -250,24 +259,14 @@ public class CameraView extends JavaCameraView implements Camera.PictureCallback
     @Override
     public void onPictureTaken(byte[] data, Camera camera) {
         Log.d("카메라뷰", "비트맵 파일을 저장한다.");
-      //  mCamera.startPreview();
-       // mCamera.setPreviewCallback(this);
-
-        Camera.Parameters parameters = mCamera.getParameters();
-        Log.d("프리뷰포멧", " : " + parameters.getPreviewFormat());
-
         Bitmap temp = BitmapFactory.decodeByteArray(data,0,data.length); //바이트를 비트맵으로 변환
         temp = PictureRotate(temp);
 
         mFaceBitamp = StickerRotate(mFaceBitamp);
-
         //리사이즈  영상이 너무크면 처리하는데 시간이 오래걸림
         temp = BitmapControl.resizeBitmap(temp);
-
-
-            mFaceBitamp = BitmapControl.resizeBitmap(mFaceBitamp);
-
-            temp = BitmapControl.combineBitmap(temp, mFaceBitamp);
+        mFaceBitamp = BitmapControl.resizeBitmap(mFaceBitamp);
+        temp = BitmapControl.combineBitmap(temp, mFaceBitamp);
 
         try{
 
@@ -280,60 +279,9 @@ public class CameraView extends JavaCameraView implements Camera.PictureCallback
             intent.putExtra("effectType",mMangaEffectData.getEffect());
             intent.putExtra("tempFile", tmpFilePath);
             mContext.startActivity(intent);
+            ((CameraActivity)mContext).overridePendingTransition(R.anim.fade, R.anim.hold);
         }
         catch (Exception e){}
-
-
-
-        /*
-        if (mApplyManga) {
-            org.opencv.core.Size newSize = new org.opencv.core.Size(temp.getWidth(), temp.getHeight());
-            Mat mtmp = new Mat(newSize, CV_8UC3);
-            Utils.bitmapToMat(temp,mtmp);
-            Mat tmp = new Mat(newSize, CV_8UC3);
-
-            mMangaEffectData.cartoonFilter(mtmp,tmp);
-            Bitmap bmp = Bitmap.createBitmap(temp.getWidth(), temp.getHeight(), Bitmap.Config.ARGB_8888);
-            Utils.matToBitmap(tmp, bmp);
-            Log.d("스케치 크기","크기 : "+temp.getWidth()+"   "+temp.getHeight());
-            try {
-                OutputStream out = new BufferedOutputStream(new FileOutputStream(mPictureFileName));
-                bmp.compress(Bitmap.CompressFormat.JPEG, 100, out);
-                Log.d("메인", "스캐치 사진 찍기");
-                out.flush();
-                out.close();
-                MediaScanner scanner = MediaScanner.newInstance(getContext());
-                scanner.mediaScanning(mPictureFileName);
-            } catch (IOException e) {
-                Log.e("메인", "사진 저장 실패");
-
-                e.printStackTrace();
-            }
-        }
-       */
-
-
-        /*
-        else {
-            try {
-                if (!mApplyManga) {
-                    OutputStream out = new BufferedOutputStream(new FileOutputStream(mPictureFileName));
-
-                    out.write(data);
-                    out.flush();
-                    out.close();
-                    //갤러리에 파일 추가
-                    MediaScanner scanner = MediaScanner.newInstance(getContext());
-                    scanner.mediaScanning(mPictureFileName);
-
-                }
-
-            } catch (IOException e) {
-                Log.e("카메라뷰", "포토콜벡 익셉션");
-            }
-        }
-        */
-       // cameraReStart();
 
     }
     public void cameraReStart()

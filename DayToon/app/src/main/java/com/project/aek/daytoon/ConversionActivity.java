@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import com.project.aek.daytoon.widget.TextBalloon;
 import net.simonvt.menudrawer.MenuDrawer;
@@ -53,6 +54,8 @@ public class ConversionActivity extends AppCompatActivity {
     MenuDrawer mMenuDrawer;
     BitmapControl bmpCnt;
 
+    SeekBar blackBrSeekbar;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +77,11 @@ public class ConversionActivity extends AppCompatActivity {
         Intent intent = getIntent();
         int i=(int)intent.getExtras().get("effectType");
         mangaEffect.setEffect(i);       //필터설정
+
+        blackBrSeekbar = (SeekBar)findViewById(R.id.blackBrSeekbar);
+        blackBrSeekbar.setProgress(mangaEffect.getBlackBr());
+        blackBrSeekbar.setOnSeekBarChangeListener(blackSeekListener);
+
         tmpFilePath = intent.getStringExtra("tempFile");    //임시저장 파일 경로
 
         tmpFileBm = BitmapFactory.decodeFile(tmpFilePath);  //임시 파일 비트맵
@@ -86,6 +94,24 @@ public class ConversionActivity extends AppCompatActivity {
 
 
     }//init
+
+    private SeekBar.OnSeekBarChangeListener blackSeekListener = new SeekBar.OnSeekBarChangeListener() {
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+
+        }
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+            mangaEffect.setBlackBr(blackBrSeekbar.getProgress());
+            createImage();
+        }
+    };
     private DialogInterface.OnDismissListener dismissProgress = new DialogInterface.OnDismissListener() {
         @Override
         public void onDismiss(DialogInterface dialog) {
@@ -96,7 +122,6 @@ public class ConversionActivity extends AppCompatActivity {
 
     void createImage(){
         if(mTread == null){
-
         final ProgressDialog dialog = new ProgressDialog(ConversionActivity.this);
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         dialog.setOnDismissListener(dismissProgress);
@@ -169,6 +194,7 @@ public class ConversionActivity extends AppCompatActivity {
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 //새로운 액티비티 스택을 지우면서 새로운 액티비티를 생성하려면 인텐트에 플래그에 입력한다.
                 startActivity(intent);
+                overridePendingTransition(R.anim.fade, R.anim.hold);
                 break;
         }
     }
