@@ -186,7 +186,7 @@ public class CameraView extends JavaCameraView implements Camera.PictureCallback
         param.setWhiteBalance(Camera.Parameters.WHITE_BALANCE_AUTO);
         int num = param.getMaxExposureCompensation();
         Log.d("화면 밝기 최대"," "+num);
-        param.setExposureCompensation(num);
+        param.setExposureCompensation(0);
       //  param.setFocusMode(param.FOCUS_MODE_AUTO);
         //mCamera.autoFocus(myAutoFocusCallback);
         try{
