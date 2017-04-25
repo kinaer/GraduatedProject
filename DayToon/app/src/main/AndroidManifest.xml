@@ -26,7 +26,6 @@
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -57,41 +56,37 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
         <activity
             android:name=".MainMenuActivity"
             android:configChanges="orientation|keyboard|screenSize"
-            android:theme="@style/CustomTheme"/>
-
+            android:theme="@style/CustomTheme" />
         <activity
             android:name=".LayoutActivity"
-            android:theme="@style/CustomTheme"
-            ></activity>
-
+            android:theme="@style/CustomTheme" />
         <activity
             android:name=".CameraActivity"
-            android:theme="@style/CustomTheme"
-           ></activity>
+            android:theme="@style/CustomTheme" />
         <activity
             android:name=".EditPotoGallery"
-            android:theme="@style/CustomTheme"></activity>
+            android:theme="@style/CustomTheme" />
         <!--
  ATTENTION: This was auto-generated to add Google Play services to your project for
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
         -->
         <activity
+            android:name=".ConversionActivity"
+            android:theme="@style/CustomTheme" />
+
+        <activity
             android:name=".AddBalloonActivity"
             android:configChanges="orientation|keyboard|screenSize"
-            android:theme="@style/CustomTheme" />
-        <activity
-            android:name=".ConversionActivity"
             android:theme="@style/CustomTheme" />
 
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
+        <activity android:name=".ShareGalleryActivity"></activity>
     </application>
 
 </manifest>
