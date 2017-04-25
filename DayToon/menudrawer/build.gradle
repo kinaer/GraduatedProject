@@ -19,6 +19,7 @@ android {
         minSdkVersion parent.ext.minSdkVersion
         targetSdkVersion parent.ext.targetSdkVersion
     }
+    buildToolsVersion '25.0.0'
 }
 
 checkstyle {

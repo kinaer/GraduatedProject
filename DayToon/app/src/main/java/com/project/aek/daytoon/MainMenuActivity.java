@@ -44,6 +44,10 @@ public class MainMenuActivity extends AppCompatActivity {
                 Log.d("_test","capture");
                 startActivity(new Intent(MainMenuActivity.this,LayoutActivity.class));
                 break;
+            case R.id.goShareGallery :
+                Log.d("_test", "goShareGallery");
+                startActivity(new Intent(MainMenuActivity.this, ShareGalleryActivity.class));
+                break;
 
         }
 

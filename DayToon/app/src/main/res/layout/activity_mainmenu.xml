@@ -35,18 +35,19 @@
         android:layout_marginTop="14dp"
         android:id="@+id/capture"
         android:layout_below="@+id/goBalloon"
-
-        android:layout_alignStart="@+id/button3"
+        android:layout_alignStart="@+id/goShareGallery"
         android:onClick="goActivity"
         android:textAllCaps="false" />
+
     <Button
-        android:text="Button"
+        android:text="gallery"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="17dp"
-        android:id="@+id/button3"
+        android:id="@+id/goShareGallery"
         android:layout_below="@+id/capture"
         android:layout_alignStart="@+id/goCamera"
+        android:onClick="goActivity"
         android:textAllCaps="false"
         />
 

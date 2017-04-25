@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr format="reference" name="menuDrawerStyle"/>
+    <color name="md__defaultBackground">#FF555555</color>
+    <declare-styleable name="MenuDrawer"><attr format="reference" name="mdContentBackground"/><attr format="reference" name="mdMenuBackground"/><attr format="dimension" name="mdMenuSize"/><attr format="reference" name="mdActiveIndicator"/><attr format="boolean" name="mdDropShadowEnabled"/><attr format="dimension" name="mdDropShadowSize"/><attr format="color" name="mdDropShadowColor"/><attr format="reference" name="mdDropShadow"/><attr format="dimension" name="mdTouchBezelSize"/><attr format="boolean" name="mdAllowIndicatorAnimation"/><attr format="integer" name="mdMaxAnimationDuration"/><attr format="reference" name="mdSlideDrawable"/><attr format="string" name="mdDrawerOpenUpContentDescription"/><attr format="string" name="mdDrawerClosedUpContentDescription"/><attr format="boolean" name="mdDrawOverlay"/><attr format="enum" name="mdPosition">
+            <enum name="left" value="0"/>
+            <enum name="top" value="1"/>
+            <enum name="right" value="2"/>
+            <enum name="bottom" value="3"/>
+            <enum name="start" value="4"/>
+            <enum name="end" value="5"/>
+        </attr></declare-styleable>
+    <item name="mdActiveViewPosition" type="id"/>
+    <item name="mdContent" type="id"/>
+    <item name="mdMenu" type="id"/>
+    <item name="md__content" type="id"/>
+    <item name="md__drawer" type="id"/>
+    <item name="md__menu" type="id"/>
+    <item name="md__translationX" type="id"/>
+    <item name="md__translationY" type="id"/>
+    <string name="md__drawerClosedIndicatorDesc">Open drawer</string>
+    <string name="md__drawerOpenIndicatorDesc">Close drawer</string>
+    <style name="Widget"/>
+    <style name="Widget.MenuDrawer">
+        <item name="mdMenuBackground">@color/md__defaultBackground</item>
+        <item name="mdContentBackground">?android:attr/windowBackground</item>
+        <item name="mdDrawerOpenUpContentDescription">@string/md__drawerOpenIndicatorDesc</item>
+        <item name="mdDrawerClosedUpContentDescription">@string/md__drawerClosedIndicatorDesc</item>
+    </style>
+</resources>
