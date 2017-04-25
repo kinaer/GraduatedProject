@@ -1,0 +1,275 @@
+[
+    {
+        "outputFile": "C:\\thong\\Project Ing\\GraduatedProject\\DayToon\\menudrawer\\build\\intermediates\\incremental\\mergeDebugAndroidTestResources\\merged.dir\\values\\values.xml",
+        "map": [
+            {
+                "to": {
+                    "startLine": 2,
+                    "startColumn": 4,
+                    "startOffset": 55,
+                    "endColumn": 53,
+                    "endOffset": 104
+                },
+                "from": {
+                    "file": "C:\\thong\\Project Ing\\GraduatedProject\\DayToon\\menudrawer\\build\\intermediates\\bundles\\debug\\res\\values\\values.xml",
+                    "position": {
+                        "startLine": 2,
+                        "startColumn": 4,
+                        "startOffset": 55,
+                        "endColumn": 53,
+                        "endOffset": 104
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 3,
+                    "startColumn": 4,
+                    "startOffset": 109,
+                    "endColumn": 57,
+                    "endOffset": 162
+                },
+                "from": {
+                    "file": "C:\\thong\\Project Ing\\GraduatedProject\\DayToon\\menudrawer\\build\\intermediates\\bundles\\debug\\res\\values\\values.xml",
+                    "position": {
+                        "startLine": 3,
+                        "startColumn": 4,
+                        "startOffset": 109,
+                        "endColumn": 57,
+                        "endOffset": 162
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 12,
+                    "startColumn": 4,
+                    "startOffset": 1312,
+                    "endColumn": 49,
+                    "endOffset": 1357
+                },
+                "from": {
+                    "file": "C:\\thong\\Project Ing\\GraduatedProject\\DayToon\\menudrawer\\build\\intermediates\\bundles\\debug\\res\\values\\values.xml",
+                    "position": {
+                        "startLine": 12,
+                        "startColumn": 4,
+                        "startOffset": 1312,
+                        "endColumn": 49,
+                        "endOffset": 1357
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 13,
+                    "startColumn": 4,
+                    "startOffset": 1362,
+                    "endColumn": 38,
+                    "endOffset": 1396
+                },
+                "from": {
+                    "file": "C:\\thong\\Project Ing\\GraduatedProject\\DayToon\\menudrawer\\build\\intermediates\\bundles\\debug\\res\\values\\values.xml",
+                    "position": {
+                        "startLine": 13,
+                        "startColumn": 4,
+                        "startOffset": 1362,
+                        "endColumn": 38,
+                        "endOffset": 1396
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 14,
+                    "startColumn": 4,
+                    "startOffset": 1401,
+                    "endColumn": 35,
+                    "endOffset": 1432
+                },
+                "from": {
+                    "file": "C:\\thong\\Project Ing\\GraduatedProject\\DayToon\\menudrawer\\build\\intermediates\\bundles\\debug\\res\\values\\values.xml",
+                    "position": {
+                        "startLine": 14,
+                        "startColumn": 4,
+                        "startOffset": 1401,
+                        "endColumn": 35,
+                        "endOffset": 1432
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 15,
+                    "startColumn": 4,
+                    "startOffset": 1437,
+                    "endColumn": 40,
+                    "endOffset": 1473
+                },
+                "from": {
+                    "file": "C:\\thong\\Project Ing\\GraduatedProject\\DayToon\\menudrawer\\build\\intermediates\\bundles\\debug\\res\\values\\values.xml",
+                    "position": {
+                        "startLine": 15,
+                        "startColumn": 4,
+                        "startOffset": 1437,
+                        "endColumn": 40,
+                        "endOffset": 1473
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 16,
+                    "startColumn": 4,
+                    "startOffset": 1478,
+                    "endColumn": 39,
+                    "endOffset": 1513
+                },
+                "from": {
+                    "file": "C:\\thong\\Project Ing\\GraduatedProject\\DayToon\\menudrawer\\build\\intermediates\\bundles\\debug\\res\\values\\values.xml",
+                    "position": {
+                        "startLine": 16,
+                        "startColumn": 4,
+                        "startOffset": 1478,
+                        "endColumn": 39,
+                        "endOffset": 1513
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 17,
+                    "startColumn": 4,
+                    "startOffset": 1518,
+                    "endColumn": 37,
+                    "endOffset": 1551
+                },
+                "from": {
+                    "file": "C:\\thong\\Project Ing\\GraduatedProject\\DayToon\\menudrawer\\build\\intermediates\\bundles\\debug\\res\\values\\values.xml",
+                    "position": {
+                        "startLine": 17,
+                        "startColumn": 4,
+                        "startOffset": 1518,
+                        "endColumn": 37,
+                        "endOffset": 1551
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 18,
+                    "startColumn": 4,
+                    "startOffset": 1556,
+                    "endColumn": 45,
+                    "endOffset": 1597
+                },
+                "from": {
+                    "file": "C:\\thong\\Project Ing\\GraduatedProject\\DayToon\\menudrawer\\build\\intermediates\\bundles\\debug\\res\\values\\values.xml",
+                    "position": {
+                        "startLine": 18,
+                        "startColumn": 4,
+                        "startOffset": 1556,
+                        "endColumn": 45,
+                        "endOffset": 1597
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 19,
+                    "startColumn": 4,
+                    "startOffset": 1602,
+                    "endColumn": 45,
+                    "endOffset": 1643
+                },
+                "from": {
+                    "file": "C:\\thong\\Project Ing\\GraduatedProject\\DayToon\\menudrawer\\build\\intermediates\\bundles\\debug\\res\\values\\values.xml",
+                    "position": {
+                        "startLine": 19,
+                        "startColumn": 4,
+                        "startOffset": 1602,
+                        "endColumn": 45,
+                        "endOffset": 1643
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 20,
+                    "startColumn": 4,
+                    "startOffset": 1648,
+                    "endColumn": 69,
+                    "endOffset": 1713
+                },
+                "from": {
+                    "file": "C:\\thong\\Project Ing\\GraduatedProject\\DayToon\\menudrawer\\build\\intermediates\\bundles\\debug\\res\\values\\values.xml",
+                    "position": {
+                        "startLine": 20,
+                        "startColumn": 4,
+                        "startOffset": 1648,
+                        "endColumn": 69,
+                        "endOffset": 1713
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 21,
+                    "startColumn": 4,
+                    "startOffset": 1718,
+                    "endColumn": 68,
+                    "endOffset": 1782
+                },
+                "from": {
+                    "file": "C:\\thong\\Project Ing\\GraduatedProject\\DayToon\\menudrawer\\build\\intermediates\\bundles\\debug\\res\\values\\values.xml",
+                    "position": {
+                        "startLine": 21,
+                        "startColumn": 4,
+                        "startOffset": 1718,
+                        "endColumn": 68,
+                        "endOffset": 1782
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 22,
+                    "startColumn": 4,
+                    "startOffset": 1787,
+                    "endColumn": 26,
+                    "endOffset": 1809
+                },
+                "from": {
+                    "file": "C:\\thong\\Project Ing\\GraduatedProject\\DayToon\\menudrawer\\build\\intermediates\\bundles\\debug\\res\\values\\values.xml",
+                    "position": {
+                        "startLine": 22,
+                        "startColumn": 4,
+                        "startOffset": 1787,
+                        "endColumn": 26,
+                        "endOffset": 1809
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 23,
+                    "startColumn": 4,
+                    "startOffset": 1814,
+                    "endLine": 28,
+                    "endColumn": 12,
+                    "endOffset": 2210
+                },
+                "from": {
+                    "file": "C:\\thong\\Project Ing\\GraduatedProject\\DayToon\\menudrawer\\build\\intermediates\\bundles\\debug\\res\\values\\values.xml",
+                    "position": {
+                        "startLine": 23,
+                        "startColumn": 4,
+                        "startOffset": 1814,
+                        "endLine": 28,
+                        "endColumn": 12,
+                        "endOffset": 2210
+                    }
+                }
+            }
+        ]
+    }
+]

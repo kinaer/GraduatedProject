@@ -1,1 +1,4 @@
-﻿opencv_world310.lib(opencv_world310.dll) : fatal error LNK1112: 'x64' 모듈 컴퓨터 종류가 'X86' 대상 컴퓨터 종류와 충돌합니다.
+﻿  cartoonFilter.cpp
+  cartoon1.cpp
+  코드를 생성하고 있습니다...
+LINK : fatal error LNK1104: 'opencv_world310.lib' 파일을 열 수 없습니다.

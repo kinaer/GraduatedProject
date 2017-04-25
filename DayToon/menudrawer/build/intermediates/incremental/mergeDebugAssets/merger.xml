@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config="main"><source path="C:\thong\Project Ing\GraduatedProject\DayToon\menudrawer\src\main\assets"/><source path="C:\thong\Project Ing\GraduatedProject\DayToon\menudrawer\build\generated\assets\shaders\debug"/></dataSet><dataSet config="debug"><source path="C:\thong\Project Ing\GraduatedProject\DayToon\menudrawer\src\debug\assets"/></dataSet></merger>

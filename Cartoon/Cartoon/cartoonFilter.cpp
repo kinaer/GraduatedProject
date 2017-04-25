@@ -118,7 +118,319 @@ void cartoonifyImage(Mat srcColor, Mat dst, int effect, int blurSize)
 	}
 
 
+void cartoonify(Mat src, Mat dst,int isC)
+{
+	Mat gray;
+	Mat gray2(src.size(),CV_8UC1);
+	Mat temp;
+	Mat mOnes;
+	Mat lMat1;
+	Mat lMat2;
+	Mat lMat3;
+	Mat lMat5;
+	Mat mWhite(src.size(),CV_8UC1);
+	Mat mBlock(src.size(), CV_8UC1);
+	Mat lMat6;
+	Mat grayToon;
 	
+	mWhite.setTo(255);
+	mBlock.setTo(0);
+	//cvtColor(src, gray2, CV_BGR2GRAY);
+	//medianBlur(gray2, gray2, 9);
+	gray2.setTo(255);
+	screentone(gray2);
+
+	//mOnes.ones(5, 5, CV_8UC1);
+	cvtColor(src, gray, CV_BGR2GRAY);		//gray영상으로 변환
+	//GaussianBlur(gray, gray, Size(3, 3), 3);		//가우시안 블러
+	//erode(gray, gray, mOnes);
+	//dilate(gray, gray, mOnes);
+
+	brightnessCorrection(gray);
+
+
+	Canny(gray, lMat3, 160, 220);
+	Canny(gray, lMat6, 40, 70);
+	threshold(gray, lMat1, 15, 255, THRESH_BINARY_INV);				//gray에서 임계값만 다르게 두 이미지 생성
+	threshold(gray, lMat2, 80, 255, THRESH_BINARY_INV);
+	Canny(gray, lMat5, 60, 80);
+
+	/*
+	mWhite.copyTo(gray);			//흰색으로 덮어
+	mBlock.copyTo(gray, lMat5);		//흰곳에 검정색을 복사해 lMat5(캐니에지)에 흰부분인 에지 부분만 복사해
+	lMat5.setTo(255);
+	mBlock.copyTo(lMat5, gray);
+	*/
+	vector<vector<Point>> contours;
+
+	//findContours(lMat5, contours, hierarchy, CV_RETR_LIST, CV_CHAIN_APPROX_NONE,Point(0,0));
+	findContours(lMat5, contours,  CV_RETR_LIST, CV_CHAIN_APPROX_NONE);		//외곽선을 검출
+							//검출한 외곽선을 4사이즈로 그린다.
+	//drawContours(gray, contours, -1, Scalar(0), 6);
+
+	if (isC == 0)
+	{
+		
+		//gray.copyTo(grayToon);
+		//brightnessCorrection(grayToon);
+		
+		//findContours(lMat5, contours, CV_RETR_LIST, CV_CHAIN_APPROX_NONE);		//외곽선을 검출
+		//흑백
+		mWhite.copyTo(dst);
+		
+		gray2.copyTo(dst, lMat2);
+		mBlock.copyTo(dst, lMat1);
+		mBlock.copyTo(dst, lMat6);
+		//gray2.copyTo(gray, gray);
+		mBlock.copyTo(dst, lMat5);
+		drawContours(dst, contours, -1, Scalar(0), 2);
+		//Mat toonMat;
+		//dst.copyTo(toonMat);
+
+		//checkeredPattern(toonMat, gray, dst);
+		
+	}
+	////////////////////////////////////////////////////////////////////
+	//		컬러
+	if (isC == 1) {
+
+		
+		Size size = src.size();
+		Size smallSize;
+		smallSize.width = size.width / 2;
+		smallSize.height = size.height / 2;
+		Mat smallImg = Mat(smallSize, CV_8UC3);
+		
+		resize(src, smallImg, smallSize, 0, 0, INTER_LINEAR);
+
+		//바이래터럴 필터를 제어하는 네가지 파라미터는 컬러강도, 위치강도, 크기, 반복횟수다. bilateralFilter()는 입력을 덮어 씌우지 않으므로
+		//임지 Mat이 필요하다.
+		Mat tmp = Mat(smallSize, CV_8UC3);		//임시 Mat을 만든다	
+		int repetitions = 4;					//강력한 만화 효과를 얻는 반복횟수
+		for (int i = 0; i < repetitions; i++) {
+			int ksize = 9;			//필터크기, 속도에 큰 영향을 미친다.
+			double sigmaColor = 9.0;	//필터의컬러강도
+			double sigmaSpace = 9.0;	//공간강도, 속도에영향을 준다.
+
+			bilateralFilter(smallImg, tmp, ksize, sigmaColor, sigmaSpace);		//
+			bilateralFilter(tmp, smallImg, ksize, sigmaColor, sigmaSpace);
+		}
+		//원래 이미지로 복구
+		Mat bigImg;
+		resize(tmp, bigImg, size, 0, 0, INTER_LINEAR);		//여기까지 바이래터렐 필터로 에지를보존하면서 이미지를 부드럽게하는 스무딩이다.
+		medianBlur(bigImg, bigImg, 9);
+		
+		dst.setTo(0);				//스케치인 에지마스크를 덮어씌우기 위해 검은 배경을 만든다.
+
+		//컬러
+		///////////////////////////////////////////////////////////////////////////////////////////////////////
+		cvtColor(bigImg, bigImg, CV_BGR2HSV);
+
+		//HSV의 경우 색조 범위는 [0,179], 채도 범위는 [0,255], 값 범위는 [0,255]입니다.
+		//http://docs.opencv.org/2.4/modules/imgproc/doc/miscellaneous_transformations.html#cvtcolor
+		cScreentone(bigImg);
+		cvtColor(bigImg, bigImg, CV_HSV2BGR);
+		//컬러
+		//vector<vector<Point> > contours2;
+		//findContours(lMat3, contours, CV_RETR_LIST, CV_CHAIN_APPROX_NONE);
+		
+		mWhite.copyTo(gray);
+		//gray2.copyTo(gray, lMat2);
+		mBlock.copyTo(gray, lMat1);
+		mBlock.copyTo(gray, lMat5);
+		mBlock.copyTo(gray, lMat6);
+		//src.copyTo(dst, gray);
+		bigImg.copyTo(dst, gray);
+		//drawContours(dst, contours, -1, Scalar(0), 2);
+		
+		//mBlock.copyTo(dst, lMat1);
+		//mBlock.copyTo(dst, lMat3);
+	}
+	//namedWindow("window1");
+	namedWindow("window2");
+	if (contours.empty())
+		cerr << "백터에 원소가 없다" << endl;
+	else
+		cerr << "백터에 원소가 있다" << endl;
+//	contours.clear();
+	
+	
+	//imshow("window1", grayToon);
+	imshow("window2", dst);
+	waitKey(0);
 	
 
+}
+void cScreentone(Mat src)
+{
+	for (int y = 0; y < src.rows; y++)
+	{
+		for (int x = 0; x < src.cols * 3; x += 3)
+		{
+			/*
+			if (src.at<unsigned char>(y, x) <= 20)
+			{
+				src.at<unsigned char>(y, x) = 0;
+			}src.at<unsigned char>(y, x) > 20 &&
+			*/
+			if (src.at<unsigned char>(y, x + 1) <= 40)
+			{
+				src.at<unsigned char>(y, x + 1) = 0;
+			}
+			else if (src.at<unsigned char>(y, x + 1) > 40 && src.at<unsigned char>(y, x + 1) <= 90)
+			{
+				src.at<unsigned char>(y, x + 1) = 75;
+			}
+			else if (src.at<unsigned char>(y, x + 1) > 90 && src.at<unsigned char>(y, x + 1) <= 140)
+			{
+				src.at<unsigned char>(y, x + 1) = 85;
+			}
+			else if (src.at<unsigned char>(y, x + 1) > 140 && src.at<unsigned char>(y, x + 1) <= 190)
+			{
+				src.at<unsigned char>(y, x + 1) = 160;
+			}
+			else if (src.at<unsigned char>(y, x + 1) > 190 && src.at<unsigned char>(y, x + 1) <= 240)
+			{
+				src.at<unsigned char>(y, x + 1) = 190;
+			}
+			else if (src.at<unsigned char>(y, x + 1) > 240)
+			{
+				src.at<unsigned char>(y, x + 1) = 255;
+			}
+			/////////////////////채도
+			//////명도
+
+			if (src.at<unsigned char>(y, x + 2) <= 50)
+			{
+				src.at<unsigned char>(y, x + 2) = 0;
+			}
+			else if (src.at<unsigned char>(y, x + 2) > 50 && src.at<unsigned char>(y, x + 2) <= 100)
+			{
+				src.at<unsigned char>(y, x + 2) = 50;
+			}
+			else if (src.at<unsigned char>(y, x + 2) > 100 && src.at<unsigned char>(y, x + 2) <= 150)
+			{
+				src.at<unsigned char>(y, x + 2) = 120;
+			}
+			
+			else if (src.at<unsigned char>(y, x + 2) > 200 && src.at<unsigned char>(y, x + 2) <= 250)
+			{
+				src.at<unsigned char>(y, x + 2) = 220;
+			}
+			/*
+			else if (src.at<unsigned char>(y, x + 2) > 160 && src.at<unsigned char>(y, x + 2) <= 200)
+			{
+				src.at<unsigned char>(y, x + 2) = 200;
+			}
+			
+			else if (src.at<unsigned char>(y, x + 2) > 200 && src.at<unsigned char>(y, x + 2) <= 240)
+			{
+				src.at<unsigned char>(y, x + 2) = 240;
+			}
+			*/
+			else if (src.at<unsigned char>(y, x + 2) > 250)
+			{
+				src.at<unsigned char>(y, x + 2) = 255;
+			}
+		
+
+
+		}
 	
+	}
+}
+	
+void checkeredPattern(Mat toonMat, Mat src, Mat dst)
+{
+	int rowCount = 0;
+	int colCount = 0;
+	bool rowFalg = true;
+	bool colFalg = true;
+
+	for (int y = 0; y < dst.rows; y++)
+	{
+		for (int x = 0; x < dst.cols; x++)
+		{
+			colCount++;
+			if (colCount >= 50)
+			{
+				colFalg = !colFalg;
+				colCount = 0;
+			}
+
+			if (rowFalg == true)
+			{
+				if (colFalg == true)
+				{
+					dst.at<unsigned char>(y, x) = src.at<unsigned char>(y, x);
+				}
+				else
+				{
+					dst.at<unsigned char>(y, x) =toonMat.at<unsigned char>(y, x);
+				}
+
+			}
+			else
+			{
+				if (colFalg == true)
+				{
+					dst.at<unsigned char>(y, x) = toonMat.at<unsigned char>(y, x);
+				}
+				else
+				{
+					dst.at<unsigned char>(y, x) = src.at<unsigned char>(y, x);
+				}
+			}
+
+		}
+		rowCount++;
+		if (rowCount >= 50)
+		{
+			rowFalg = !rowFalg;
+			rowCount = 0;
+		}
+	}
+}
+
+void screentone(Mat gray)
+{
+	
+	for (int y = 0; y < gray.rows; y++)
+	{
+		for (int x = 0; x < gray.cols; x++)
+		{
+			if((x%3==0))
+			
+			gray.at<unsigned char>(y, x) = 150;
+		
+		}
+		
+	}
+}
+	
+void brightnessCorrection(Mat gray) {
+	for (int y = 0; y < gray.rows; ++y)
+	{
+		for (int x = 0; x < gray.cols; ++x)
+		{
+			int temp;
+			int intensity;
+			if (gray.at<unsigned char>(y, x) > 127) //많이 허옇다면
+			{
+				intensity = (gray.at<unsigned char>(y, x) - 127) * 0.5;
+				temp = gray.at<unsigned char>(y, x) + intensity;
+			}	
+			else              //거뭍거뭍하면
+			{
+				intensity = (127 - gray.at<unsigned char>(y, x)) * 0.5;
+				temp = gray.at<unsigned char>(y, x) - intensity;
+			}//
+			//상한값 하한값 조정
+			if (temp > 250)
+				temp = 255;
+			else if (temp < 5)
+				temp = 0;
+			gray.at<unsigned char>(y, x) = temp;
+		}
+	}
+}
