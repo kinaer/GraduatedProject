@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_above="@+id/bottom"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+
+            android:layout_weight="1">
+
+            <RelativeLayout
+
+                android:id="@+id/a_bus_info_lay"
+                android:layout_width="264dp"
+                android:layout_height="250dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:layout_marginBottom="10dp"
+                >
+
+                <ImageView
+                    android:id="@+id/user_image0"
+                    android:tag="0"
+                    android:layout_width="264dp"
+                    android:layout_height="264dp"
+                    android:background="#FFFFFF"
+                    android:layout_weight="1"
+                    android:onClick="call"
+                     />
+
+                <TextView
+                    android:id="@+id/balloon0_dr"
+                    android:onClick="balloon"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:gravity="center"
+                    android:tag="0"
+                    android:text=""
+                    android:textColor="#000000"
+                    android:textSize="10dp"
+                    android:textStyle="bold"
+                    android:typeface="sans"
+                    android:background="@drawable/bal_dright"
+                    android:visibility="invisible"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true" />
+                <TextView
+                    android:id="@+id/balloon0_tl"
+                    android:onClick="balloon"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:gravity="center"
+                    android:tag="0"
+                    android:textColor="#000000"
+                    android:textSize="10dp"
+                    android:textStyle="bold"
+                    android:typeface="sans"
+                    android:background="@drawable/bal_tleft"
+                    android:visibility="invisible"
+                     />
+
+                <TextView
+                android:id="@+id/balloon0_tr"
+                android:onClick="balloon"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:gravity="center"
+                android:tag="0"
+                android:text=""
+                android:textColor="#000000"
+                android:textSize="10dp"
+                android:textStyle="bold"
+                android:typeface="sans"
+                android:background="@drawable/bal_tright"
+                android:visibility="invisible"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true" />
+
+                <TextView
+                    android:id="@+id/balloon0_dl"
+                    android:onClick="balloon"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:gravity="center"
+                    android:tag="0"
+                    android:text=""
+                    android:textColor="#000000"
+                    android:textSize="10dp"
+                    android:textStyle="bold"
+                    android:typeface="sans"
+                    android:background="@drawable/bal_dleft"
+                    android:visibility="invisible"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentStart="true" />
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+
+                android:id="@+id/a_bus_info_lay1"
+                android:layout_width="264dp"
+                android:layout_height="250dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:layout_marginBottom="10dp"
+                >
+
+                <ImageView
+                    android:id="@+id/user_image1"
+                    android:tag="1"
+                    android:layout_width="264dp"
+                    android:layout_height="264dp"
+                    android:background="#FFFFFF"
+                    android:layout_weight="1"
+                    android:onClick="call"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                     />
+
+                <TextView
+                    android:id="@+id/balloon1_dr"
+                    android:onClick="balloon"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:gravity="center"
+                    android:paddingLeft="20dp"
+                    android:tag="1"
+                    android:text=""
+                    android:textColor="#000000"
+                    android:textSize="10dp"
+                    android:textStyle="bold"
+                    android:typeface="sans"
+                    android:background="@drawable/bal_dright"
+                    android:visibility="invisible"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true" />
+                <TextView
+                    android:id="@+id/balloon1_tl"
+                    android:onClick="balloon"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:gravity="center"
+                    android:paddingLeft="20dp"
+                    android:tag="1"
+                    android:text=""
+                    android:textColor="#000000"
+                    android:textSize="10dp"
+                    android:textStyle="bold"
+                    android:typeface="sans"
+                    android:background="@drawable/bal_tleft"
+                    android:visibility="invisible"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true" />
+
+                <TextView
+                    android:id="@+id/balloon1_tr"
+                    android:onClick="balloon"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:gravity="center"
+                    android:paddingLeft="20dp"
+                    android:tag="1"
+                    android:text=""
+                    android:textColor="#000000"
+                    android:textSize="10dp"
+                    android:textStyle="bold"
+                    android:typeface="sans"
+                    android:background="@drawable/bal_tright"
+                    android:visibility="invisible"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true" />
+
+                <TextView
+                    android:id="@+id/balloon1_dl"
+                    android:onClick="balloon"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:gravity="center"
+                    android:paddingLeft="20dp"
+                    android:tag="1"
+                    android:text=""
+                    android:textColor="#000000"
+                    android:textSize="10dp"
+                    android:textStyle="bold"
+                    android:typeface="sans"
+                    android:background="@drawable/bal_dleft"
+                    android:visibility="invisible"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentStart="true" />
+
+
+            </RelativeLayout>
+
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+
+            android:layout_weight="1">
+
+
+            <RelativeLayout
+
+                android:id="@+id/a_bus_info_lay2"
+                android:layout_width="264dp"
+                android:layout_height="250dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:layout_marginBottom="10dp"
+                >
+
+                <ImageView
+                    android:id="@+id/user_image2"
+                    android:tag="2"
+                    android:layout_width="264dp"
+                    android:layout_height="264dp"
+                    android:background="#FFFFFF"
+                    android:layout_weight="1"
+                    android:onClick="call"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true" />
+
+                <TextView
+                    android:id="@+id/balloon2_dr"
+                    android:onClick="balloon"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:gravity="center"
+                    android:paddingLeft="20dp"
+                    android:tag="2"
+                    android:text=""
+                    android:textColor="#000000"
+                    android:textSize="10dp"
+                    android:textStyle="bold"
+                    android:typeface="sans"
+                    android:background="@drawable/bal_dright"
+                    android:visibility="invisible"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true" />
+                <TextView
+                    android:id="@+id/balloon2_tl"
+                    android:onClick="balloon"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:gravity="center"
+                    android:paddingLeft="20dp"
+                    android:tag="2"
+                    android:text=""
+                    android:textColor="#000000"
+                    android:textSize="10dp"
+                    android:textStyle="bold"
+                    android:typeface="sans"
+                    android:background="@drawable/bal_tleft"
+                    android:visibility="invisible"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true" />
+
+                <TextView
+                    android:id="@+id/balloon2_tr"
+                    android:onClick="balloon"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:gravity="center"
+                    android:paddingLeft="20dp"
+                    android:tag="2"
+                    android:text=""
+                    android:textColor="#000000"
+                    android:textSize="10dp"
+                    android:textStyle="bold"
+                    android:typeface="sans"
+                    android:background="@drawable/bal_tright"
+                    android:visibility="invisible"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true" />
+
+                <TextView
+                    android:id="@+id/balloon2_dl"
+                    android:onClick="balloon"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:gravity="center"
+                    android:paddingLeft="20dp"
+                    android:tag="2"
+                    android:text=""
+                    android:textColor="#000000"
+                    android:textSize="10dp"
+                    android:textStyle="bold"
+                    android:typeface="sans"
+                    android:background="@drawable/bal_dleft"
+                    android:visibility="invisible"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentStart="true" />
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+
+                android:id="@+id/a_bus_info_lay3"
+                android:layout_width="264dp"
+                android:layout_height="250dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:layout_marginBottom="10dp"
+                >
+
+                <ImageView
+                    android:id="@+id/user_image3"
+                    android:tag="3"
+                    android:layout_width="264dp"
+                    android:layout_height="264dp"
+                    android:background="#FFFFFF"
+                    android:layout_weight="1"
+                    android:onClick="call"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true" />
+
+                <TextView
+                    android:id="@+id/balloon3_dr"
+                    android:onClick="balloon"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:gravity="center"
+                    android:paddingLeft="20dp"
+                    android:tag="3"
+                    android:text=""
+                    android:textColor="#000000"
+                    android:textSize="10dp"
+                    android:textStyle="bold"
+                    android:typeface="sans"
+                    android:background="@drawable/bal_dright"
+                    android:visibility="invisible"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true" />
+                <TextView
+                    android:id="@+id/balloon3_tl"
+                    android:onClick="balloon"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:gravity="center"
+                    android:paddingLeft="20dp"
+                    android:tag="3"
+                    android:text=""
+                    android:textColor="#000000"
+                    android:textSize="10dp"
+                    android:textStyle="bold"
+                    android:typeface="sans"
+                    android:background="@drawable/bal_tleft"
+                    android:visibility="invisible"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true" />
+
+                <TextView
+                    android:id="@+id/balloon3_tr"
+                    android:onClick="balloon"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:gravity="center"
+                    android:paddingLeft="20dp"
+                    android:tag="3"
+                    android:text=""
+                    android:textColor="#000000"
+                    android:textSize="10dp"
+                    android:textStyle="bold"
+                    android:typeface="sans"
+                    android:background="@drawable/bal_tright"
+                    android:visibility="invisible"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true" />
+
+                <TextView
+                    android:id="@+id/balloon3_dl"
+                    android:onClick="balloon"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:gravity="center"
+                    android:paddingLeft="20dp"
+                    android:tag="3"
+                    android:text=""
+                    android:textColor="#000000"
+                    android:textSize="10dp"
+                    android:textStyle="bold"
+                    android:typeface="sans"
+                    android:background="@drawable/bal_dleft"
+                    android:visibility="invisible"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentStart="true" />
+
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_alignParentBottom="true">
+
+        <Button
+            android:id="@+id/capture"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:textSize="20sp"
+            android:text="저장하기"/>
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

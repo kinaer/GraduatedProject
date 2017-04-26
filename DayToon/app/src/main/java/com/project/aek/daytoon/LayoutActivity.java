@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -20,6 +21,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedOutputStream;
@@ -41,7 +43,7 @@ public class LayoutActivity extends Activity {
 
     private LinearLayout container;
 
-    private int seleted_number = 0;
+    private int selected_number = 0;
 
     final int PICK_FROM_ALBUM = 100 ;
     final int CROP_FROM_iMAGE = 200 ;
@@ -51,21 +53,51 @@ public class LayoutActivity extends Activity {
             "/SmartWheel/" + System.currentTimeMillis() + ".jpg";
 
 
-    int[] imges = {
+    int[] user_image = {
             R.id.user_image0,
             R.id.user_image1,
             R.id.user_image2,
             R.id.user_image3,
-            R.id.user_image4,
-            R.id.user_image5
+    };
+
+    //사진이 들어있는지 체크
+    int[] image_check={0,0,0,0};
+
+    int[] balloon_check={0,0,0,0};
+    int[] balloon_tr = {
+            R.id.balloon0_tr,
+            R.id.balloon1_tr,
+            R.id.balloon2_tr,
+            R.id.balloon3_tr
+    };
+    int[] balloon_tl = {
+            R.id.balloon0_tl,
+            R.id.balloon1_tl,
+            R.id.balloon2_tl,
+            R.id.balloon3_tl
 
     };
+    int[] balloon_dr = {
+            R.id.balloon0_dr,
+            R.id.balloon1_dr,
+            R.id.balloon2_dr,
+            R.id.balloon3_dr
+
+    };int[] balloon_dl = {
+            R.id.balloon0_dl,
+            R.id.balloon1_dl,
+            R.id.balloon2_dl,
+            R.id.balloon3_dl
+
+    };
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.signupphoto);
+        setContentView(R.layout.cut4_layout);
 
         container = (LinearLayout) findViewById(R.id.container);
 
@@ -217,34 +249,362 @@ public class LayoutActivity extends Activity {
         }
     }
 
+
+
+
+    public void location() {
+
+
+
+
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.balloon_location);
+        dialog.setTitle("말풍선위치");
+
+        Button tright = (Button) dialog.findViewById(R.id.tright);
+        Button tleft = (Button) dialog.findViewById(R.id.tleft);
+        Button dleft = (Button) dialog.findViewById(R.id.dleft);
+        Button dright = (Button) dialog.findViewById(R.id.dright);
+
+        tright.setOnClickListener(new Button.OnClickListener() {
+
+            public void onClick(View v) {
+
+                setBalloon_tr();
+                dialog.dismiss();
+            }
+        });
+        tleft.setOnClickListener(new Button.OnClickListener() {
+
+            public void onClick(View v) {
+
+                setBalloon_tl();
+                dialog.dismiss();
+            }
+        });
+        dleft.setOnClickListener(new Button.OnClickListener() {
+
+            public void onClick(View v) {
+
+                setBalloon_dl();
+                dialog.dismiss();
+            }
+        });
+        dright.setOnClickListener(new Button.OnClickListener() {
+
+            public void onClick(View v) {
+
+                setBalloon_dr();
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
+    public void setBalloon_tr(){
+        ImageView iv_UserPhoto = (ImageView)findViewById(user_image[selected_number]);
+        TextView iv_balloon_tr = (TextView)findViewById(balloon_tr[selected_number]);
+        TextView iv_balloon_tl = (TextView)findViewById(balloon_tl[selected_number]);
+        TextView iv_balloon_dr = (TextView)findViewById(balloon_dr[selected_number]);
+        TextView iv_balloon_dl = (TextView)findViewById(balloon_dl[selected_number]);
+
+
+        iv_balloon_tr.setVisibility(View.VISIBLE);
+        iv_balloon_tl.setVisibility(View.INVISIBLE);
+        iv_balloon_dr.setVisibility(View.INVISIBLE);
+        iv_balloon_dl.setVisibility(View.INVISIBLE);
+
+
+        balloon_check[selected_number]=1;
+
+    }
+    public void setBalloon_tl(){
+        ImageView iv_UserPhoto = (ImageView)findViewById(user_image[selected_number]);
+        TextView iv_balloon_tr = (TextView)findViewById(balloon_tr[selected_number]);
+        TextView iv_balloon_tl = (TextView)findViewById(balloon_tl[selected_number]);
+        TextView iv_balloon_dr = (TextView)findViewById(balloon_dr[selected_number]);
+        TextView iv_balloon_dl = (TextView)findViewById(balloon_dl[selected_number]);
+
+
+        iv_balloon_tr.setVisibility(View.INVISIBLE);
+        iv_balloon_tl.setVisibility(View.VISIBLE);
+        iv_balloon_dr.setVisibility(View.INVISIBLE);
+        iv_balloon_dl.setVisibility(View.INVISIBLE);
+
+
+        balloon_check[selected_number]=1;
+
+    }
+    public void setBalloon_dr(){
+        ImageView iv_UserPhoto = (ImageView)findViewById(user_image[selected_number]);
+        TextView iv_balloon_tr = (TextView)findViewById(balloon_tr[selected_number]);
+        TextView iv_balloon_tl = (TextView)findViewById(balloon_tl[selected_number]);
+        TextView iv_balloon_dr = (TextView)findViewById(balloon_dr[selected_number]);
+        TextView iv_balloon_dl = (TextView)findViewById(balloon_dl[selected_number]);
+
+
+        iv_balloon_tr.setVisibility(View.INVISIBLE);
+        iv_balloon_tl.setVisibility(View.INVISIBLE);
+        iv_balloon_dr.setVisibility(View.VISIBLE);
+        iv_balloon_dl.setVisibility(View.INVISIBLE);
+
+
+        balloon_check[selected_number]=1;
+
+    }
+    public void setBalloon_dl(){
+        ImageView iv_UserPhoto = (ImageView)findViewById(user_image[selected_number]);
+        TextView iv_balloon_tr = (TextView)findViewById(balloon_tr[selected_number]);
+        TextView iv_balloon_tl = (TextView)findViewById(balloon_tl[selected_number]);
+        TextView iv_balloon_dr = (TextView)findViewById(balloon_dr[selected_number]);
+        TextView iv_balloon_dl = (TextView)findViewById(balloon_dl[selected_number]);
+
+
+        iv_balloon_tr.setVisibility(View.INVISIBLE);
+        iv_balloon_tl.setVisibility(View.INVISIBLE);
+        iv_balloon_dr.setVisibility(View.INVISIBLE);
+        iv_balloon_dl.setVisibility(View.VISIBLE);
+
+
+        balloon_check[selected_number]=1;
+
+    }
+
+
+    public void balloon(View v) {
+
+        String tag = v.getTag().toString();
+        selected_number = Integer.parseInt(tag);
+
+        v.setDrawingCacheEnabled(true);
+
+
+
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.balloon_text);
+        dialog.setTitle("말풍선");
+
+
+        final EditText text = (EditText)dialog.findViewById(R.id.text1);
+
+        Button ok = (Button) dialog.findViewById(R.id.ok1);
+
+        ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                try {
+                    String word = text.getText().toString();
+                    if ( word == null || word.equals("") ) {
+
+                        Toast.makeText(getBaseContext(), "비어있습니다.", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    if( word.length()>20){
+
+                        Toast.makeText(getBaseContext(), "20자 이내로 입력해주세요", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    try {
+
+                        //File f = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), word+".png");
+
+
+                        Toast.makeText(getBaseContext(), "입력되었습니다.", Toast.LENGTH_SHORT).show();
+
+                        TextView iv_balloon_tr = (TextView)findViewById(balloon_tr[selected_number]);
+                        TextView iv_balloon_tl = (TextView)findViewById(balloon_tl[selected_number]);
+                        TextView iv_balloon_dr = (TextView)findViewById(balloon_dr[selected_number]);
+                        TextView iv_balloon_dl = (TextView)findViewById(balloon_dl[selected_number]);
+
+                        iv_balloon_tr.setText(word);
+                        iv_balloon_tl.setText(word);
+                        iv_balloon_dr.setText(word);
+                        iv_balloon_dl.setText(word);
+
+
+                    } catch (Exception e) {
+
+                        Log.d("_test","err:" + e.getMessage());
+
+                    }
+
+                    dialog.dismiss();
+
+
+
+                } catch (Exception e) {
+
+                    Log.d("_test","err: " + e.getMessage());
+
+                }
+
+
+            }
+        });
+
+        Button cancel = (Button) dialog.findViewById(R.id.cancel1);
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+
+
+
+    }
+
+
+
+
+
+
     public void call(View v) {
 
 
         String tag = v.getTag().toString();
 
-        seleted_number = Integer.parseInt(tag);
+        selected_number = Integer.parseInt(tag);
 
-        DialogInterface.OnClickListener albumListener = new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                doTakeAlbumAction();
-            }
-        };
+        //사진이 없을경우 사진부터 입력하게끔 유도
+        if(image_check[selected_number]==0&&balloon_check[selected_number]==0){
 
-        DialogInterface.OnClickListener cancelListener = new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        };
 
-        new AlertDialog.Builder(this)
-                .setTitle("업로드할 이미지 선택")
-                .setNeutralButton("앨범선택", albumListener)
-                .setNegativeButton("취소", cancelListener)
-                .show();
+            DialogInterface.OnClickListener albumListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    doTakeAlbumAction();
+                }
+            };
+
+            DialogInterface.OnClickListener cancelListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            };
+
+
+
+
+            new AlertDialog.Builder(this)
+                    .setTitle("업로드할 이미지 선택")
+                    .setNeutralButton("앨범선택", albumListener)
+                    .setNegativeButton("취소", cancelListener)
+                    .show();
+        }
+
+        //사진이 들어있을 경우 말풍선 메뉴도 같이 출력
+        if(image_check[selected_number]==1&&balloon_check[selected_number]==0) {
+
+            DialogInterface.OnClickListener albumListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    doTakeAlbumAction();
+                }
+            };
+
+            DialogInterface.OnClickListener cancelListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            };
+
+            DialogInterface.OnClickListener balloonListener = new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    location();
+
+
+
+
+
+
+
+                }
+            };
+
+
+            new AlertDialog.Builder(this)
+                    .setTitle("업로드할 이미지 선택")
+                    .setNeutralButton("앨범선택", albumListener)
+                    .setPositiveButton("취소", cancelListener)
+                    .setNegativeButton("말풍선", balloonListener)
+                    .show();
+        }
+
+
+        //말풍선까지 들어가 있을 경우
+        if(image_check[selected_number]==1&&balloon_check[selected_number]==1){
+
+
+            DialogInterface.OnClickListener albumListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    doTakeAlbumAction();
+                }
+            };
+
+            DialogInterface.OnClickListener cancelListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            };
+
+
+            DialogInterface.OnClickListener ballondismissListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    balloondismiss();
+                }
+            };
+
+
+
+
+
+            new AlertDialog.Builder(this)
+                    .setTitle("업로드할 이미지 선택")
+                    .setNeutralButton("앨범선택", albumListener)
+                    .setPositiveButton("취소", cancelListener)
+                    .setNegativeButton("말풍선제거",ballondismissListener)
+                    .show();
+
+        }
 
     }
+
+
+
+
+
+
+
+    //말풍선 제거
+    public void balloondismiss(){
+        TextView iv_balloon_tr = (TextView)findViewById(balloon_tr[selected_number]);
+        TextView iv_balloon_tl = (TextView)findViewById(balloon_tl[selected_number]);
+        TextView iv_balloon_dr = (TextView)findViewById(balloon_dr[selected_number]);
+        TextView iv_balloon_dl = (TextView)findViewById(balloon_dl[selected_number]);
+
+        iv_balloon_tr.setVisibility(View.INVISIBLE);
+        iv_balloon_tl.setVisibility(View.INVISIBLE);
+        iv_balloon_dr.setVisibility(View.INVISIBLE);
+        iv_balloon_dl.setVisibility(View.INVISIBLE);
+
+        balloon_check[selected_number]=0;
+
+
+    }
+
+
+
+
 
 
 
@@ -263,6 +623,7 @@ public class LayoutActivity extends Activity {
         startActivityForResult(intent, EditPotoGallery);
 
     }
+
 
 
 
@@ -294,7 +655,7 @@ public class LayoutActivity extends Activity {
 
                 if (extras != null) {
 
-                    ImageView iv_UserPhoto = (ImageView)findViewById(imges[seleted_number]);
+                    ImageView iv_UserPhoto = (ImageView)findViewById(user_image[selected_number]);
 
                     String path = extras.getString("bm");
 
@@ -330,7 +691,7 @@ public class LayoutActivity extends Activity {
 
                 if (extras != null) {
 
-                    ImageView iv_UserPhoto = (ImageView)findViewById(imges[seleted_number]);
+                    ImageView iv_UserPhoto = (ImageView)findViewById(user_image[selected_number]);
 
                     Bitmap photo = extras.getParcelable("data"); // CROP된 BITMAP
 
@@ -338,6 +699,7 @@ public class LayoutActivity extends Activity {
                     BitmapDrawable drawable = new BitmapDrawable(getResources(), photo);
 
                     iv_UserPhoto.setBackground(drawable);
+                    image_check[selected_number]=1;
 
                     // CROP된 이미지를 저장하기 위한 FILE 경로
                     // storeCropImage(photo, CROP_PATH);
@@ -370,6 +732,8 @@ public class LayoutActivity extends Activity {
         intent.putExtra("scale", true);
         intent.putExtra("return-data", true);
         startActivityForResult(intent, CROP_FROM_iMAGE); // CROP_FROM_CAMERA case문 이동
+
+
     }
 
 }
