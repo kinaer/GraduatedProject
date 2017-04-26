@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+
+        android:layout_alignParentBottom="true"
+
+        android:layout_marginBottom="10dp"
+
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/dleft"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@drawable/bal_dleft"
+            android:layout_marginLeft="10dp"
+
+            android:text="cancel"/>
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/dright"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@drawable/bal_dright"
+            android:layout_marginRight="10dp"
+
+            android:text="ok"/>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/tright"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:background="@drawable/bal_tright"
+        android:layout_marginLeft="10dp"
+
+        android:text="cancel"
+        android:layout_alignBaseline="@+id/ok1"
+        android:layout_alignBottom="@+id/ok1"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:id="@+id/tleft"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+
+        android:layout_marginRight="10dp"
+        android:background="@drawable/bal_tleft"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+</RelativeLayout>
