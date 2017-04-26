@@ -82,6 +82,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <ExecutablePath>C:\opencv\build\x64\vc12;$(ExecutablePath)</ExecutablePath>
+    <LibraryPath>C:\opencv\build\x64\vc12\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -143,12 +145,15 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>C:\opencv\build\include\opencv2;C:\opencv\build\include\opencv;C:\opencv\build\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\opencv\build\x64\vc12\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opencv_calib3d2413.lib;opencv_calib3d2413d.lib;opencv_contrib2413.lib;opencv_contrib2413d.lib;opencv_core2413.lib;opencv_core2413d.lib;opencv_features2d2413.lib;opencv_features2d2413d.lib;opencv_flann2413.lib;opencv_flann2413d.lib;opencv_gpu2413.lib;opencv_gpu2413d.lib;opencv_highgui2413.lib;opencv_imgproc2413.lib;opencv_highgui2413d.lib;opencv_imgproc2413d.lib;opencv_legacy2413.lib;opencv_legacy2413d.lib;opencv_ml2413.lib;opencv_ml2413d.lib;opencv_nonfree2413.lib;opencv_nonfree2413d.lib;opencv_objdetect2413.lib;opencv_objdetect2413d.lib;opencv_ocl2413.lib;opencv_ocl2413d.lib;opencv_photo2413.lib;opencv_photo2413d.lib;opencv_stitching2413.lib;opencv_stitching2413d.lib;opencv_superres2413.lib;opencv_superres2413d.lib;opencv_ts2413.lib;opencv_ts2413d.lib;opencv_video2413.lib;opencv_video2413d.lib;opencv_videostab2413.lib;opencv_videostab2413d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
