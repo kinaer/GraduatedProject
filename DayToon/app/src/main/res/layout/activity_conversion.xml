@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         android:adjustViewBounds="true"
         android:scaleType="fitXY"
-        />
+        android:contentDescription="" />
 
 
 </LinearLayout>

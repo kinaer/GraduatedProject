@@ -36,10 +36,6 @@ public class MainMenuActivity extends AppCompatActivity {
                 Log.d("_test","goCamera");
                 startActivity(new Intent(MainMenuActivity.this,CameraActivity.class));
                 break;
-            case R.id.goBalloon:
-                Log.d("_test","goBalloon");
-                startActivity(new Intent(MainMenuActivity.this,AddBalloonActivity.class));
-                break;
             case R.id.capture:
                 Log.d("_test","capture");
                 startActivity(new Intent(MainMenuActivity.this,LayoutActivity.class));

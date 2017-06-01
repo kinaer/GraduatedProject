@@ -224,18 +224,12 @@ private BaseLoaderCallback mLoadeCallback= new BaseLoaderCallback(this){
                 }
                 else if(effect == mCvCameraView.mMangaEffectData.SKETCH_C)
                 {
-                    chageBtnImg = R.drawable.presence_perple;
-                    changeBtm.setBackground(getDrawable(chageBtnImg));
-                    mCvCameraView.mMangaEffectData.setEffect(mCvCameraView.mMangaEffectData.PAINT);
-                    effect = mCvCameraView.mMangaEffectData.PAINT;
-                }
-                else if(effect == mCvCameraView.mMangaEffectData.PAINT)
-                {
                     chageBtnImg = android.R.drawable.presence_invisible;
                     changeBtm.setBackground(getDrawable(chageBtnImg));
                     mCvCameraView.mMangaEffectData.setEffect(mCvCameraView.mMangaEffectData.SKETCH);
                     effect = mCvCameraView.mMangaEffectData.SKETCH;
                 }
+
 
                 break;
             case R.id.stikerBtm:            //스티커 on off 버튼
@@ -337,37 +331,6 @@ private BaseLoaderCallback mLoadeCallback= new BaseLoaderCallback(this){
 
     @Override
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
-
-        /*
-            Mat mrgb  = new Mat(inputFrame.rgba().size(),CV_8UC3);
-            if(mCvCameraView.mframe != null)
-            {
-                Bitmap frameBmp = BitmapFactory.decodeByteArray(mCvCameraView.mframe,0,mCvCameraView.mframe.length);
-
-                Size size = new Size(frameBmp.getWidth(),frameBmp.getHeight());
-                Mat mtmp = new Mat(size, CV_8UC3);
-
-                Bitmap result = Bitmap.createBitmap(frameBmp.getWidth(), frameBmp.getHeight(), Bitmap.Config.ARGB_8888);
-                Canvas c = new Canvas(result);
-                c.drawBitmap(frameBmp,0,0,null);
-
-                Utils.bitmapToMat(result,mtmp);
-                Imgproc.cvtColor(mtmp,mtmp,Imgproc.COLOR_BGR2GRAY);
-
-                Bitmap bmp = Bitmap.createBitmap(frameBmp.getWidth(),frameBmp.getHeight(), Bitmap.Config.ARGB_8888);
-                Utils.matToBitmap(mtmp,bmp);
-
-                Imgproc.cvtColor(inputFrame.rgba(), mrgb ,Imgproc.COLOR_BGRA2BGR);
-
-                Log.d("프레임비트맵","널아님"+frameBmp.getHeight());
-                faceView.setCascadeFaces(mCvCameraView.startFaceDetect(inputFrame.gray()), frameBmp);
-
-            }
-            else
-            {
-                Log.d("프레임비트맵","널임");
-            }
-*/
 
             return inputFrame.rgba();
 
