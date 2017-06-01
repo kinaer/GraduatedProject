@@ -268,9 +268,13 @@ public class CameraView extends JavaCameraView implements Camera.PictureCallback
         mFaceBitamp = BitmapControl.resizeBitmap(mFaceBitamp);
         temp = BitmapControl.combineBitmap(temp, mFaceBitamp);
 
-        try{
-
-            String tmpFilePath = Environment.getExternalStorageDirectory()+"/Android/data/"+mContext.getPackageName()+File.separator+"face.jpg";
+       try{
+           Log.d("트라이 접근"," ");
+           // String file = Environment.getExternalStorageDirectory()+"/Android/data/"+mContext.getPackageName();
+           File file = new File(Environment.getExternalStorageDirectory()+"/Android/data/"+mContext.getPackageName());
+           if(!(file.exists()))
+                file.mkdirs();
+            String tmpFilePath = file.getPath()+File.separator+"face.jpg";
             OutputStream tmpFile = new BufferedOutputStream(new FileOutputStream(tmpFilePath));
             temp.compress(Bitmap.CompressFormat.JPEG,100,tmpFile);
             tmpFile.close();
@@ -280,8 +284,11 @@ public class CameraView extends JavaCameraView implements Camera.PictureCallback
             intent.putExtra("tempFile", tmpFilePath);
             mContext.startActivity(intent);
             ((CameraActivity)mContext).overridePendingTransition(R.anim.fade, R.anim.hold);
-        }
-        catch (Exception e){}
+       }
+         catch (Exception e){
+             Log.d("익셉션","왜또왜 ");
+             e.getMessage();
+         }
 
     }
     public void cameraReStart()
