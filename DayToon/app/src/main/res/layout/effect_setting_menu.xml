@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:text="흑백 설정"
+        android:text="-----흑백 설정-----"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/textView"
@@ -25,6 +25,48 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/textView1"
+        android:textAlignment="center"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp" />
+
+    <TextView
+        android:text="-----컬러 설정-----"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView2"
+        android:textAlignment="center"
+        android:paddingTop="30dp"
+        android:paddingBottom="5dp" />
+
+    <SeekBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/colorSr"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:max="100" />
+
+    <TextView
+        android:text="밝기"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView3"
+        android:textAlignment="center"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp" />
+
+    <SeekBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/colorSaturation"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:max="100" />
+    <TextView
+        android:text="채도"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView4"
         android:textAlignment="center"
         android:paddingBottom="5dp"
         android:paddingTop="5dp" />

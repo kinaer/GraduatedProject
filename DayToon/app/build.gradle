@@ -1,6 +1,16 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        config {
+        }
+        daytoonR {
+            keyAlias 'daytoon'
+            keyPassword 'qw1963'
+            storeFile file('C:/thong/Graduated_Project/GraduatedProject/GraduatedProject/DayToon/DayToon.jks')
+            storePassword 'qw1963'
+        }
+    }
     compileSdkVersion 24
     buildToolsVersion '25.0.0'
     defaultConfig {
@@ -11,7 +21,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        ndk{
+        ndk {
             moduleName "cartoonfier"
         }
     }
@@ -19,6 +29,9 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.daytoonR
+        }
+        debug {
         }
     }
     sourceSets.main {
@@ -27,6 +40,8 @@ android {
         //Compile된 Native Library가 저장될 경로
         //jniLibs.srcDir 'N:/AndroidDev/OpenCV-3.0.0-android-sdk-1/OpenCV-android-sdk/sdk/native/libs/armeabi-v7a'
         jniLibs.srcDir 'src/main/libs'
+    }
+    productFlavors {
     }
 }
 

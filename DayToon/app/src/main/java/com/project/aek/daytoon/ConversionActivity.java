@@ -55,6 +55,8 @@ public class ConversionActivity extends AppCompatActivity {
     BitmapControl bmpCnt;
 
     SeekBar blackBrSeekbar;
+    SeekBar colorSrSeekbar;
+    SeekBar colorStSeekbar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -81,6 +83,14 @@ public class ConversionActivity extends AppCompatActivity {
         blackBrSeekbar = (SeekBar)findViewById(R.id.blackBrSeekbar);
         blackBrSeekbar.setProgress(mangaEffect.getBlackBr());
         blackBrSeekbar.setOnSeekBarChangeListener(blackSeekListener);
+
+        colorSrSeekbar= (SeekBar)findViewById(R.id.colorSr);
+        colorSrSeekbar.setProgress(mangaEffect.getColorSr());
+        colorSrSeekbar.setOnSeekBarChangeListener(colorSeekListener);
+
+        colorStSeekbar = (SeekBar)findViewById(R.id.colorSaturation);
+        colorStSeekbar.setProgress(mangaEffect.getSaturation());
+        colorStSeekbar.setOnSeekBarChangeListener(colorSeekListener);
 
         tmpFilePath = intent.getStringExtra("tempFile");    //임시저장 파일 경로
 
@@ -112,6 +122,25 @@ public class ConversionActivity extends AppCompatActivity {
             createImage();
         }
     };
+
+    private SeekBar.OnSeekBarChangeListener colorSeekListener = new SeekBar.OnSeekBarChangeListener() {
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+
+        }
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+            mangaEffect.setColorSr(colorSrSeekbar.getProgress());
+            mangaEffect.setSaturation(colorStSeekbar.getProgress());
+            createImage();
+        }
+    };
     private DialogInterface.OnDismissListener dismissProgress = new DialogInterface.OnDismissListener() {
         @Override
         public void onDismiss(DialogInterface dialog) {
@@ -132,7 +161,7 @@ public class ConversionActivity extends AppCompatActivity {
                 public void run(){
                     mangaEffect.cartoonFilter(srcMat,dstMat);
                     Utils.matToBitmap(dstMat,effectedBm);
-                    dialog.dismiss();
+                   dialog.dismiss();
                 }
             });
             mTread.start();
